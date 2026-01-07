@@ -22,7 +22,7 @@ Imports:
 
 ## Jump
 - [Project](#project)
-- [VACChain](#vacchain)
+- [VACChain](#vac-chain)
 - [Endpoint](#endpoint)
 - [Frontier](#frontier)
 - [Frontier semantics](#frontier-semantics)
@@ -60,7 +60,7 @@ A unit of ownership and continuity. Projects are the primary index for the portf
 
 ---
 
-## VACChain
+## VACChain {#vac-chain}
 
 A Value-Add Chain describes value in the world and its production path. It ties a project to one or more endpoints that can be verified.
 

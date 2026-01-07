@@ -31,15 +31,15 @@ Imports:
 
 Checks are truth enforcement. They exist to evaluate endpoints, produce evidence, and update frontier. A check is successful only if it emits the evidence required by the endpoint.
 
-### Check taxonomy (v0)
+### Check taxonomy (v0) {#check-taxonomy}
 
-1. **Smoke**
+1. #### Smoke
    - Intent: fast, offline, fixture-driven verification.
    - Typical use: PIPELINE and TOOLSMITH.
    - Inputs: fixtures or local test inputs only.
    - Output: artifacts plus logs plus exit code.
 
-2. **Run live bounded**
+2. #### Run live bounded
    - Intent: validate behavior on live inputs with strict bounds.
    - Typical use: SERVICE and PIPELINE.
    - Bounds: timebox, scope limit, rate limits, safe mode.
@@ -56,7 +56,7 @@ Checks are truth enforcement. They exist to evaluate endpoints, produce evidence
    - Typical use: SERVICE.
    - Output: health status plus logs/metrics pointer.
 
-5. **Content validation**
+5. #### Content validation
    - Intent: prevent silent corruption by enforcing invariants on outputs.
    - Typical use: PIPELINE, SERVICE.
    - Examples: schema validation, non-empty checks, row counts, uniqueness constraints, hash consistency.
@@ -104,7 +104,8 @@ Runbooks are memory. They exist to reduce decision load, enable re-entry, and ma
 
 A project may have both. Missing runbooks is typically WARN for active projects.
 
-### RunbookHuman minimum spec (v0)
+
+### RunbookHuman minimum spec (v0) {#runbookhuman}
 - Purpose (one paragraph)
 - What “done” looks like (tie to endpoints)
 - Preconditions and prerequisites
@@ -113,7 +114,8 @@ A project may have both. Missing runbooks is typically WARN for active projects.
 - Next pointers (what to do after PASS, WARN, FAIL)
 - Ownership and cadence (who updates, when reviewed)
 
-### RunbookMachine minimum spec (v0)
+
+### RunbookMachine minimum spec (v0) {#runbookmachine}
 - Entry points: exact commands (make targets, scripts, CLI)
 - Inputs: paths, fixtures, env vars
 - Outputs: artifact locations and patterns

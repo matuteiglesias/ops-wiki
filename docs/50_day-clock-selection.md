@@ -11,7 +11,7 @@ Exports:
 - Block model
 - Run a day protocol
 - SelectionPolicy
-- WIP and archiving rules
+- WIP caps and archiving rules
 - Re-entry protocol
 
 Imports:
@@ -24,7 +24,7 @@ Imports:
 - [Block model](#block-model)
 - [Selection policy](#selection-policy)
 - [Re-entry protocol](#re-entry-protocol)
-- [WIP and archiving](#wip-and-archiving)
+- [WIP caps and archiving](#wip-caps-and-archiving)
 - [Maintenance vs focus](#maintenance-vs-focus)
 
 ---
@@ -183,7 +183,7 @@ Re-entry exists because dropouts are expected. The system is designed so returni
 
 ---
 
-## WIP and archiving
+## WIP caps and archiving
 
 WIP caps prevent mode switching chaos and endless parallel starts.
 

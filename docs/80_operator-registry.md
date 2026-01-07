@@ -83,11 +83,26 @@ Minimum fields to consider an operator “defined”:
 - `op_id`, `name`, `mode_ids[]`, `steps[]`, `acceptance_checks[]`, `timebox_minutes`, `failure_paths[]`, `evidence_pattern`
 
 
+
+
+## Used by
+- [Mode constraints](execution-model#modes-v1)
+- [Prepared queues](day-clock-selection#selection-policy)
+- [Checks taxonomy](checks-runbooks#check-types)
+- [Frontier semantics](data-model#frontier)
+
+## See also
+- [Templates](templates)
+- [Walkthrough: One Project End-to-End](walkthrough-one-project)
+- [One Pager Spec](spec-one-pager)
+
+
+
 ---
 
-## Operator Registry v0
+## Allowed values (create new ones only if really necessary) 
 
-### Allowed values (Mode IDs)
+### Mode IDs
 
 * `PIPELINE`
 * `TOOLSMITH`
@@ -96,7 +111,7 @@ Minimum fields to consider an operator “defined”:
 * `GOVERNANCE`
 * `CONTACT`
 
-### Allowed values (Check types used by operators)
+### Check types used by operators
 
 * `smoke`
 * `run_live_bounded`
@@ -104,7 +119,7 @@ Minimum fields to consider an operator “defined”:
 * `health_check`
 * `content_validation`
 
-### Allowed values (Common evidence outputs)
+### Common evidence outputs
 
 * `log`
 * `manifest`
@@ -116,6 +131,8 @@ Minimum fields to consider an operator “defined”:
 * `debug_packet`
 
 ---
+
+## Operator list {#operator-list}
 
 ## A) Core execution operators
 
@@ -391,14 +408,3 @@ These support the future “precomputed queue per mode” idea without assuming 
 
 
 ---
-
-## Used by
-- [Mode constraints](execution-model#modes-v1)
-- [Prepared queues](day-clock-selection#selection-policy)
-- [Checks taxonomy](checks-runbooks#check-types)
-- [Frontier semantics](data-model#frontier)
-
-## See also
-- [Templates](templates)
-- [Walkthrough: One Project End-to-End](walkthrough-one-project)
-- [One Pager Spec](spec-one-pager)
