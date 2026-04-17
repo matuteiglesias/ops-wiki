@@ -15,6 +15,12 @@ Rule: templates are minimal but complete. If a field is unknown, write `UNKNOWN`
 - [Endpoint](#endpoint-template)
 - [Operator](#operator-template)
 - [OpRun](#oprun-template)
+- [Capture note](#capture-note-template)
+- [Condensed session note](#condensed-session-note-template)
+- [Recruiter reply](#recruiter-reply-template)
+- [Application packet](#application-packet-template)
+- [Meeting prep brief](#meeting-prep-brief-template)
+- [Safe mode checklist](#safe-mode-checklist-template)
 - [DebugPacket](#debugpacket-template)
 - [RunbookHuman](#runbookhuman-template)
 - [RunbookMachine](#runbookmachine-template)
@@ -219,6 +225,193 @@ op_run:
     - "UNKNOWN"
 
   next_pointer: "One line next action"
+```
+
+---
+
+## Capture note template
+
+Links:
+
+* Operators: [CaptureIntake](operator-registry#e-governance-operators)
+
+```yaml
+capture_note:
+  capture_id: "cap_YYYYMMDD_hhmm"
+  timestamp: "UNKNOWN"                 # ISO timestamp
+  source_type: "UNKNOWN"               # speech | meeting | chat | scratch
+  participants:
+    - "UNKNOWN"
+  raw_context:
+    - "Bullet with factual fragment"
+    - "Bullet with question/open thread"
+  explicit_unknowns:
+    - "UNKNOWN"
+  candidate_mappings:
+    candidate_project_ids:
+      - "UNKNOWN"
+    candidate_case_ids:
+      - "UNKNOWN"
+    candidate_batch_ids:
+      - "UNKNOWN"
+  artifact_links:
+    - "UNKNOWN"                        # recording/transcript/doc links
+  notes: "Do not over-structure here; preserve signal."
+```
+
+---
+
+## Condensed session note template
+
+Links:
+
+* Operators: [SessionCondense](operator-registry#e-governance-operators), [NextPointerFromCapture](operator-registry#e-governance-operators), [MeetingPacketDraft](operator-registry#e-governance-operators)
+
+```yaml
+condensed_session_note:
+  condense_id: "csn_YYYYMMDD_hhmm"
+  based_on_capture_ids:
+    - "cap_YYYYMMDD_hhmm"
+  context_summary: "3-6 lines max with operationally relevant context"
+  decisions:
+    - "Decision 1"
+  unknowns:
+    - "UNKNOWN"
+  candidate_next_pointer:
+    text: "One-line executable next move"
+    candidate_mode_id: "UNKNOWN"       # PIPELINE | TOOLSMITH | SERVICE | CONTRACT | GOVERNANCE | CONTACT
+    candidate_operator: "UNKNOWN"
+    timebox_minutes: 45
+  candidate_case_batch_project:
+    type: "UNKNOWN"                    # case | batch | project
+    id_or_slug: "UNKNOWN"
+    rationale: "Why this mapping is likely"
+  promoted_artifact_links:
+    - "UNKNOWN"
+  failure_path_if_unclear: "Route to triage GOVERNANCE block with explicit unknowns."
+```
+
+---
+
+## Recruiter reply template
+
+Links:
+
+* Operators: [RecruiterReplyDraft](operator-registry#f-contact-operators), [BriefBeforeSend](operator-registry#f-contact-operators)
+
+```yaml
+recruiter_reply:
+  reply_id: "rr_YYYYMMDD_hhmm"
+  thread_ref: "UNKNOWN"
+  objective: "What this reply must achieve"
+  positioning:
+    fit_summary: "2-4 lines"
+    constraints:
+      - "UNKNOWN"
+  key_points:
+    - "Point 1"
+    - "Point 2"
+  call_to_action: "Requested next step"
+  risk_flags:
+    - "UNKNOWN"
+  next_pointer: "If sent, what happens next"
+```
+
+---
+
+## Application packet template
+
+Links:
+
+* Operators: [TargetBatchTriage](operator-registry#f-contact-operators), [ApplicationPacketPrep](operator-registry#f-contact-operators)
+
+```yaml
+application_packet:
+  packet_id: "ap_YYYYMMDD_slug"
+  target:
+    company_or_org: "UNKNOWN"
+    role_or_track: "UNKNOWN"
+    source_link: "UNKNOWN"
+  objective: "Submission-ready packet for this target"
+  components:
+    cv_version: "UNKNOWN"
+    cover_note: "UNKNOWN"
+    evidence_snippets:
+      - "UNKNOWN"
+  status: "draft"                  # draft | ready_to_send | sent | blocked
+  blockers:
+    - "UNKNOWN"
+  sent_log_ref: "UNKNOWN"
+  followup_window: "UNKNOWN"
+  next_pointer: "One executable next step"
+```
+
+---
+
+## Meeting prep brief template
+
+Links:
+
+* Operators: [StakeholderMeetingPrep](operator-registry#f-contact-operators), [FollowUpStrategy](operator-registry#f-contact-operators)
+
+```yaml
+meeting_prep_brief:
+  brief_id: "mpb_YYYYMMDD_hhmm"
+  stakeholder_case: "UNKNOWN"
+  objective: "What outcome this meeting should produce"
+  current_status: "1-3 lines of context"
+  asks:
+    - "Ask 1"
+  decision_points:
+    - "Decision needed"
+  risks:
+    - "UNKNOWN"
+  supporting_artifacts:
+    - "UNKNOWN"
+  followup_plan:
+    owner: "UNKNOWN"
+    window: "UNKNOWN"
+    trigger: "UNKNOWN"
+  next_pointer: "Post-meeting next action"
+```
+
+---
+
+## Safe mode checklist template
+
+Links:
+
+* Protocol: [Safe mode branch](day-clock-selection#safe-mode-branch-low-judgment-protocol)
+* Intro: [Safe Mode / Low Judgment](intro#safe-mode--low-judgment-625-min)
+
+```yaml
+safe_mode_checklist:
+  checklist_id: "smc_YYYYMMDD_hhmm"
+  trigger_signals:
+    - "late_night_activation"
+    - "poor_sleep"
+    - "recent_substance_use"
+    - "emotional_overload"
+    - "reopen_everything_impulse"
+  allowed_moves:
+    - "CaptureIntake"
+    - "SessionCondense"
+    - "LockInSession"
+    - "PrepareBlockQueue"
+    - "ContactQueueGroom"
+    - "inventory_first"
+  forbidden_moves:
+    - "refactor"
+    - "irreversible_decision"
+    - "new_major_front"
+    - "unbounded_debug"
+  bounded_triage:
+    active_now:
+      - "UNKNOWN"
+    deferred:
+      - "UNKNOWN"
+  next_pointer: "One executable next step"
+  reassess_at: "UNKNOWN"         # ISO timestamp
 ```
 
 ---
