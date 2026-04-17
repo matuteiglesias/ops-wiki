@@ -15,6 +15,8 @@ Rule: templates are minimal but complete. If a field is unknown, write `UNKNOWN`
 - [Endpoint](#endpoint-template)
 - [Operator](#operator-template)
 - [OpRun](#oprun-template)
+- [Capture note](#capture-note-template)
+- [Condensed session note](#condensed-session-note-template)
 - [DebugPacket](#debugpacket-template)
 - [RunbookHuman](#runbookhuman-template)
 - [RunbookMachine](#runbookmachine-template)
@@ -219,6 +221,70 @@ op_run:
     - "UNKNOWN"
 
   next_pointer: "One line next action"
+```
+
+---
+
+## Capture note template
+
+Links:
+
+* Operators: [CaptureIntake](operator-registry#e-governance-operators)
+
+```yaml
+capture_note:
+  capture_id: "cap_YYYYMMDD_hhmm"
+  timestamp: "UNKNOWN"                 # ISO timestamp
+  source_type: "UNKNOWN"               # speech | meeting | chat | scratch
+  participants:
+    - "UNKNOWN"
+  raw_context:
+    - "Bullet with factual fragment"
+    - "Bullet with question/open thread"
+  explicit_unknowns:
+    - "UNKNOWN"
+  candidate_mappings:
+    candidate_project_ids:
+      - "UNKNOWN"
+    candidate_case_ids:
+      - "UNKNOWN"
+    candidate_batch_ids:
+      - "UNKNOWN"
+  artifact_links:
+    - "UNKNOWN"                        # recording/transcript/doc links
+  notes: "Do not over-structure here; preserve signal."
+```
+
+---
+
+## Condensed session note template
+
+Links:
+
+* Operators: [SessionCondense](operator-registry#e-governance-operators), [NextPointerFromCapture](operator-registry#e-governance-operators), [MeetingPacketDraft](operator-registry#e-governance-operators)
+
+```yaml
+condensed_session_note:
+  condense_id: "csn_YYYYMMDD_hhmm"
+  based_on_capture_ids:
+    - "cap_YYYYMMDD_hhmm"
+  context_summary: "3-6 lines max with operationally relevant context"
+  decisions:
+    - "Decision 1"
+  unknowns:
+    - "UNKNOWN"
+  candidate_next_pointer:
+    text: "One-line executable next move"
+    candidate_mode_id: "UNKNOWN"       # PIPELINE | TOOLSMITH | SERVICE | CONTRACT | GOVERNANCE | CONTACT
+    candidate_operator: "UNKNOWN"
+    timebox_minutes: 45
+  candidate_case_batch_project:
+    type: "UNKNOWN"                    # case | batch | project
+    id_or_slug: "UNKNOWN"
+    rationale: "Why this mapping is likely"
+  promoted_artifact_links:
+    - "UNKNOWN"
+  failure_path_if_unclear: "Route to triage GOVERNANCE block with explicit unknowns."
 ```
 
 ---

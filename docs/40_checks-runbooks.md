@@ -58,8 +58,8 @@ Checks are truth enforcement. They exist to evaluate endpoints, produce evidence
 
 5. #### Content validation
    - Intent: prevent silent corruption by enforcing invariants on outputs.
-   - Typical use: PIPELINE, SERVICE.
-   - Examples: schema validation, non-empty checks, row counts, uniqueness constraints, hash consistency.
+   - Typical use: PIPELINE, SERVICE, GOVERNANCE, CONTACT.
+   - Examples: schema validation, non-empty checks, row counts, uniqueness constraints, hash consistency, required narrative fields.
 
 ### Required properties (v0)
 Every check definition should specify:
@@ -68,6 +68,11 @@ Every check definition should specify:
 - acceptance criteria: what counts as PASS
 - evidence emitted: logs, manifests, artifacts
 - failure output: where to find diagnostics
+
+For narrative/stakeholder artifacts validated by content checks, include:
+- required fields (`objective`, `decision_or_status`, `next_pointer`, `trace_links`)
+- traceability rule (must link source and promoted artifacts where applicable)
+- structure rule (template sections present; unknowns explicit)
 
 ---
 
@@ -155,6 +160,8 @@ A manifest should contain:
 ### Evidence quality rule
 - A check is not “green” because it ran. It is green because it emitted meaningful evidence.
 - If you cannot link evidence, downgrade to WARN even if exit code is zero.
+- Narrative/stakeholder evidence counts only if structured and traceable; loose free text is not enough.
+- In technical contexts (endpoint checks), narrative evidence can explain decisions but cannot replace required technical evidence.
 
 ---
 
