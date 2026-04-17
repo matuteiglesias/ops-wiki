@@ -20,8 +20,8 @@ This wiki is a small internal manual to run a multi project life with low re ent
 ## How to use the wiki in 60 seconds
 1) Read the [One Pager Spec](spec-one-pager) to reorient
 2) Pick a work object (Project or Case/Batch/Sprint/Encounter)
-3) Pick a block and choose a mode in [Day Clock and Selection](day-clock-selection)
-4) Run legal operators and produce evidence, then update frontier
+3) Run BOOT + [Daily Compiler Lite](daily-plan-compiler-algorithm#daily-compiler-lite-default-610-min) in [Day Clock and Selection](day-clock-selection)
+4) Execute first focus block, produce evidence, then update frontier
 
 ## Jump
 - [Run a day](day-clock-selection#run-a-day)

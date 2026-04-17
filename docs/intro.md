@@ -7,13 +7,14 @@ sidebar_position: 0
 This wiki is an operator console.
 
 If you have 2 minutes, follow **Re-entry**.
-If you have 10 minutes, follow **BOOT**.
+If you have 10 minutes, run **BOOT + Daily Compiler Lite**.
 If you have 60–90 minutes, follow **First Focus Block**.
 
 ## Jump
 - [Re-entry (2–6 min)](#re-entry-26-min)
 - [Safe Mode / Low Judgment (6–25 min)](#safe-mode--low-judgment-625-min)
 - [BOOT (10–20 min)](#boot-1020-min)
+- [Daily Compiler Lite (6–10 min)](#daily-compiler-lite-610-min)
 - [First focus block (60–90 min)](#first-focus-block-6090-min)
 - [If you are lost](#if-you-are-lost)
 - [Minimal navigation](#minimal-navigation)
@@ -127,6 +128,45 @@ If you are not closer to evidence by ~40 minutes:
 - create a DebugPacket and stop.
 
 Next: see [Selection policy](day-clock-selection#selection-policy).
+
+---
+
+
+### BOOT output contract
+By the end of BOOT, you should have one compact chain:
+- **Frontier**: top FAIL or cheap WARN selected
+- **Decision label**: PARK / PLAN_ONLY / NUDGE / RESCUE / KILL
+- **Allowed work**: one FOCUS stream + bounded MAINT
+- **Session design**: one first OpRun with evidence + stop rule
+- **Closure hook**: one line for end-of-day update
+
+This chain comes from the [Daily Plan Compiler](daily-plan-compiler-algorithm). BOOT is now the short entry route into that compiler.
+
+## Daily Compiler Lite (6–10 min)
+
+Use this right after BOOT on normal days. It is the default path for turning intent into a runnable day.
+
+1) Frontier pick (60–90 seconds)
+- Select top 1 FAIL or top 1 cheap WARN.
+- Keep everything else parked for now.
+
+2) Decision labels (2–3 minutes)
+- Tag candidate items with: PARK / PLAN_ONLY / NUDGE / RESCUE / KILL.
+- If uncertain, downgrade to PLAN_ONLY.
+
+3) Allowed work (1 minute)
+- Allow exactly one deep FOCUS stream (core unlock).
+- Allow at most one extra wiring move (usually PLAN_ONLY or NUDGE).
+- Route anxiety/comms/admin to MAINT.
+
+4) Session design (2–3 minutes)
+- Write one OpRun line: `work_object + operator + evidence + stop rule`.
+- Confirm mode is one of [Modes v1](execution-model#modes-v1).
+
+5) Closure hook (30 seconds)
+- Pre-write a one-line close: “evidence shipped, frontier updated, next pointer written”.
+
+If day complexity is high (many overrides, many due check-ins), run the **full** compiler: [Daily Plan Compiler (Full)](daily-plan-compiler-algorithm).
 
 ---
 

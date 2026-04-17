@@ -35,12 +35,12 @@ Imports:
 This is the smallest protocol that keeps the system alive and makes days comparable. The day is successful if it produces evidence and reduces future decision load.
 
 ### The daily contract (v0)
-- You run BOOT once.
+- You run BOOT once, then compile with [Daily Compiler Lite](daily-plan-compiler-algorithm#daily-compiler-lite-default-610-min) (or Full when needed).
 - You run at least one focus block or one “catch-up check-in” if you are in low energy.
 - You produce at least one piece of evidence or one governance artifact that changes tomorrow.
 
 ### BOOT procedure (10–20 minutes)
-Goal: initialize state so work becomes selectable. No fixing, no debugging.
+Goal: initialize state so work becomes selectable. No fixing, no debugging. BOOT hands off directly to the Daily Plan Compiler.
 
 1. Open the system state
    - Frontier snapshot (PASS/WARN/FAIL summary)
@@ -56,10 +56,12 @@ Goal: initialize state so work becomes selectable. No fixing, no debugging.
 4. Drift guardrail
    - If debugging exceeds ~40 minutes without progress: create a [DebugPacket](execution-model#debugpacket) and stop.
 
-BOOT output:
-- One chosen mode
-- One planned OperatorRun
-- One expected evidence line
+BOOT + Compiler Lite output:
+- Frontier pick
+- Decision label per candidate (PARK / PLAN_ONLY / NUDGE / RESCUE / KILL)
+- Allowed work set (FOCUS + MAINT)
+- One planned OperatorRun with stop rule and evidence
+- One closure hook line
 
 ### Minimal day variant (when you are late or low energy)
 - BOOT (6 minutes): choose mode + write one OperatorRun
