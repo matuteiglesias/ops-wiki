@@ -5,10 +5,11 @@ sidebar_position: 30
 ---
 
 ## Module header
-Purpose: define the truth objects and invariants for projects, endpoints, frontier, cadence, and evidence.
+Purpose: define the truth objects and invariants for projects, lightweight work units, endpoints, frontier, cadence, and evidence.
 
 Exports:
 - Project
+- WorkUnit (Case | Batch | Sprint | Encounter)
 - VACChain
 - Endpoint
 - FrontierState
@@ -22,6 +23,7 @@ Imports:
 
 ## Jump
 - [Project](#project)
+- [Lightweight work units](#lightweight-work-units)
 - [VACChain](#vac-chain)
 - [Endpoint](#endpoint)
 - [Frontier](#frontier)
@@ -57,6 +59,61 @@ A unit of ownership and continuity. Projects are the primary index for the portf
 ### Notes
 - “Home” is where it belongs. “Mode” is how you work. Do not merge them.
 - A project can be human-owned with machine-run checks, or machine-owned with human runbooks.
+
+---
+
+## Lightweight work units
+
+Lightweight work units are valid first-class planning/execution objects for short-lived or situational work.  
+They are intentionally lighter than Project and **do not require VAC chains or endpoints**.
+
+Types:
+- `Case`: one bounded situation to resolve (usually one outcome, one thread).
+- `Batch`: repeated similar actions handled together (N items, same flow).
+- `Sprint`: short focused effort window for repair/prep/cleanup/build-up.
+- `Encounter`: a concrete interaction event (meeting/call/visit/conversation) with follow-up.
+
+### Fields (minimum contract)
+- `unit_type` (`case` | `batch` | `sprint` | `encounter`)
+- `unit_id` (stable, unique)
+- `title`
+- `objective` (one clear done statement)
+- `horizon` (same-day | 2-7-days | 1-4-weeks)
+- `owner_type` (human-owned | machine-owned | mixed)
+- `state` (idea | active | blocked | done | archived)
+- `artifacts_expected[]` (notes, packets, logs, docs, outputs)
+- `next_pointer` (one-line next action)
+- `project_id` (optional; link if this unit belongs to an existing project)
+
+### Invariants
+- Work units may exist independently of any project.
+- Work units may attach to a project (`project_id`) when continuity already exists.
+- If a work unit persists across repeated cycles or gains operational surface area, promote to project.
+- Promotion is explicit: create project, then map prior unit artifacts as seed context.
+
+### Promotion rule (v0)
+Promote `Case/Batch/Sprint/Encounter` to `Project` when at least 2 of these are true:
+- the unit survives beyond its original horizon,
+- it needs recurring cadence/check-ins,
+- it now requires stable runbooks/operators across sessions,
+- it accumulates multiple dependent subthreads.
+
+### Use Project vs Work Unit (decision rule)
+Use **Project** when continuity, verification, and maintenance are expected.  
+Use **Case/Batch/Sprint/Encounter** when scope is short, situational, or throughput-oriented.
+
+### Examples
+1) **Family meeting packet** (`encounter`)
+   - objective: leave meeting with decisions + open asks + next owner
+   - artifacts_expected: packet draft, decision note, follow-up list
+
+2) **Batch of 10 job applications** (`batch`)
+   - objective: submit 10 applications with tailored snippets
+   - artifacts_expected: application tracker row updates, sent links, next follow-up pointer
+
+3) **Room repair/prep block** (`sprint`)
+   - objective: restore room to usable state in one 2-hour sprint
+   - artifacts_expected: checklist, before/after photos, missing-materials note
 
 ---
 

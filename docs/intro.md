@@ -23,6 +23,11 @@ If you have 60–90 minutes, follow **First Focus Block**.
 
 Use this when you skipped a day or you feel resistance. Goal is continuity, not productivity.
 
+If your starting point is messy human input (voice dump, mixed fronts, scattered notes), take the **intake route** first:
+- Run `CaptureIntake` to store raw context.
+- Run `SessionCondense` to extract decisions/unknowns.
+- Run `NextPointerFromCapture` to choose one executable next move.
+
 1) Refresh truth (no fixing)
 - Open your frontier snapshot (PASS/WARN/FAIL).
 - Identify the **top 1 FAIL** or **top 1 cheap WARN**.
@@ -51,6 +56,12 @@ Next: see [Day Clock and Selection](day-clock-selection#re-entry-protocol).
 
 Use this at the start of a normal day. Goal is to make the next block executable with low choice.
 
+If BOOT input is not project-clean (speech + context blend), do a short intake pass first (10–20 min total still valid):
+1) `CaptureIntake`
+2) `SessionCondense`
+3) `NextPointerFromCapture`
+Then continue with project/mode selection below.
+
 1) Open the spine
 - [One Pager Spec](spec-one-pager)
 - Your frontier snapshot (PASS/WARN/FAIL)
@@ -62,14 +73,14 @@ Use your default: if uncertain, choose MAINT + GOVERNANCE.
 Mode reference:
 - [Modes v1](execution-model#modes-v1)
 
-3) Select one project
-- Prefer FAIL if actionable
-- Else pick a cheap WARN you can clear fast
-- Else pick the highest value pipeline with a clean operator
+3) Select one work object (project or lightweight unit)
+- If you have a clear active project, pick that.
+- If work is short/situational, pick a `Case`, `Batch`, `Sprint`, or `Encounter`.
+- Prefer FAIL/WARN cleanup for projects; prefer tight objective + bounded horizon for lightweight units.
 
 4) Pre-write the operator run
 Write a single planned OpRun line:
-- `project_id + operator + expected evidence + stop rule`
+- `work_object_id + operator + expected evidence + stop rule`
 
 5) Set the stop rule (anti-drift)
 If you are not closer to evidence by ~40 minutes:

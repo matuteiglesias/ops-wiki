@@ -287,6 +287,55 @@ Minimum fields to consider an operator “defined”:
 
 ## E) Governance operators
 
+### Intake / capture family (entry from raw human context)
+
+Use this family when session input is raw speech, mixed fronts, meeting fragments, or “live context” that is not yet project-clean.  
+These operators are first-class entry moves and should usually run before `LockInSession`.
+
+### `CaptureIntake`
+
+* **Modes:** GOVERNANCE, CONTACT
+* **Purpose:** Capture raw human input into a durable intake note without forcing premature structure.
+* **Inputs:** raw notes/transcript fragments, source context, timestamp, optional participants.
+* **Outputs:** capture note, source links, initial tags (projects/cases/batches as candidates).
+* **Acceptance checks:** content_validation (capture note has source + timestamp + unknowns)
+* **Evidence:** capture note file + links to source artifacts
+* **Timebox:** 10–25
+* **Failure paths:** if source is too noisy, store minimal factual bullets + explicit UNKNOWNs and stop.
+
+### `SessionCondense`
+
+* **Modes:** GOVERNANCE
+* **Purpose:** Convert one or more capture notes into a concise operational note.
+* **Inputs:** capture note(s), existing frontier context, open threads.
+* **Outputs:** condensed session note with decisions, unknowns, and explicit constraints.
+* **Acceptance checks:** content_validation (condensed note has decisions/unknowns/next candidates)
+* **Evidence:** condensed session note + backlinks to capture notes
+* **Timebox:** 15–35
+* **Failure paths:** if ambiguity remains high, split into 2–3 hypotheses and route via DebugPacket or ADRLite.
+
+### `NextPointerFromCapture`
+
+* **Modes:** GOVERNANCE
+* **Purpose:** Derive a candidate next pointer and likely mode/operator from condensed intake material.
+* **Inputs:** condensed session note, current frontier, WIP limits.
+* **Outputs:** candidate next pointer, candidate mode, candidate operator.
+* **Acceptance checks:** content_validation (pointer is one-line executable and timeboxed)
+* **Evidence:** next-pointer record linked to condensed note
+* **Timebox:** 10–20
+* **Failure paths:** if no safe pointer exists, emit explicit “needs triage” pointer and schedule GOVERNANCE block.
+
+### `MeetingPacketDraft`
+
+* **Modes:** GOVERNANCE, CONTACT
+* **Purpose:** Draft a meeting packet that can be promoted into case/batch/project artifacts.
+* **Inputs:** condensed session note, stakeholder context, evidence links.
+* **Outputs:** candidate case/batch/project, open questions, promotion-ready artifact links.
+* **Acceptance checks:** content_validation (packet includes objective, status, asks, links)
+* **Evidence:** meeting packet draft + promoted artifact links (if any)
+* **Timebox:** 20–45
+* **Failure paths:** if packet scope explodes, keep only objective/status/asks and defer decomposition.
+
 ### `DailyFrontierCompute`
 
 * **Modes:** GOVERNANCE
