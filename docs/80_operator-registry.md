@@ -129,6 +129,12 @@ Minimum fields to consider an operator “defined”:
 * `runbook_human`
 * `runbook_machine`
 * `debug_packet`
+* `target_list`
+* `classified_batch`
+* `response_draft`
+* `sent_log`
+* `meeting_brief`
+* `followup_schedule`
 
 ---
 
@@ -287,6 +293,55 @@ Minimum fields to consider an operator “defined”:
 
 ## E) Governance operators
 
+### Intake / capture family (entry from raw human context)
+
+Use this family when session input is raw speech, mixed fronts, meeting fragments, or “live context” that is not yet project-clean.  
+These operators are first-class entry moves and should usually run before `LockInSession`.
+
+### `CaptureIntake`
+
+* **Modes:** GOVERNANCE, CONTACT
+* **Purpose:** Capture raw human input into a durable intake note without forcing premature structure.
+* **Inputs:** raw notes/transcript fragments, source context, timestamp, optional participants.
+* **Outputs:** capture note, source links, initial tags (projects/cases/batches as candidates).
+* **Acceptance checks:** content_validation (capture note has source + timestamp + unknowns)
+* **Evidence:** capture note file + links to source artifacts
+* **Timebox:** 10–25
+* **Failure paths:** if source is too noisy, store minimal factual bullets + explicit UNKNOWNs and stop.
+
+### `SessionCondense`
+
+* **Modes:** GOVERNANCE
+* **Purpose:** Convert one or more capture notes into a concise operational note.
+* **Inputs:** capture note(s), existing frontier context, open threads.
+* **Outputs:** condensed session note with decisions, unknowns, and explicit constraints.
+* **Acceptance checks:** content_validation (condensed note has decisions/unknowns/next candidates)
+* **Evidence:** condensed session note + backlinks to capture notes
+* **Timebox:** 15–35
+* **Failure paths:** if ambiguity remains high, split into 2–3 hypotheses and route via DebugPacket or ADRLite.
+
+### `NextPointerFromCapture`
+
+* **Modes:** GOVERNANCE
+* **Purpose:** Derive a candidate next pointer and likely mode/operator from condensed intake material.
+* **Inputs:** condensed session note, current frontier, WIP limits.
+* **Outputs:** candidate next pointer, candidate mode, candidate operator.
+* **Acceptance checks:** content_validation (pointer is one-line executable and timeboxed)
+* **Evidence:** next-pointer record linked to condensed note
+* **Timebox:** 10–20
+* **Failure paths:** if no safe pointer exists, emit explicit “needs triage” pointer and schedule GOVERNANCE block.
+
+### `MeetingPacketDraft`
+
+* **Modes:** GOVERNANCE, CONTACT
+* **Purpose:** Draft a meeting packet that can be promoted into case/batch/project artifacts.
+* **Inputs:** condensed session note, stakeholder context, evidence links.
+* **Outputs:** candidate case/batch/project, open questions, promotion-ready artifact links.
+* **Acceptance checks:** content_validation (packet includes objective, status, asks, links)
+* **Evidence:** meeting packet draft + promoted artifact links (if any)
+* **Timebox:** 20–45
+* **Failure paths:** if packet scope explodes, keep only objective/status/asks and defer decomposition.
+
 ### `DailyFrontierCompute`
 
 * **Modes:** GOVERNANCE
@@ -345,6 +400,8 @@ Minimum fields to consider an operator “defined”:
 
 ## F) Contact operators
 
+CONTACT subfamilies (lightweight, non-mode): `OPPORTUNITY`, `RECRUITER`, `STAKEHOLDER_CASE`.
+
 ### `CRMSprint`
 
 * **Modes:** CONTACT
@@ -371,6 +428,60 @@ Minimum fields to consider an operator “defined”:
 * **Evidence:** updated queue + next touch plan
 * **Timebox:** 15–30
 * **Failure paths:** if too big, groom only top 10.
+
+### `TargetBatchTriage`
+
+* **Modes:** CONTACT
+* **Purpose:** Classify a raw opportunity/target list into a prioritized actionable batch.
+* **Acceptance checks:** content_validation (batch has priority, status, next action)
+* **Evidence:** target_list + classified_batch
+* **Timebox:** 20–45
+* **Failure paths:** if inputs are noisy, classify top 10 only and defer long tail.
+
+### `ApplicationPacketPrep`
+
+* **Modes:** CONTACT
+* **Purpose:** Prepare a submission-ready application packet for one target or a bounded batch.
+* **Acceptance checks:** content_validation (required packet sections present)
+* **Evidence:** application packet artifact + checklist + links
+* **Timebox:** 30–75
+* **Failure paths:** if blocked by missing data, produce partial packet + explicit missing fields list.
+
+### `RecruiterReplyDraft`
+
+* **Modes:** CONTACT
+* **Purpose:** Draft a positioned recruiter response aligned with objective, constraints, and next step.
+* **Acceptance checks:** content_validation (objective, constraints, ask, CTA present)
+* **Evidence:** response_draft + trace links to source thread
+* **Timebox:** 15–35
+* **Failure paths:** if context unclear, emit clarifying-questions draft first.
+
+### `StakeholderMeetingPrep`
+
+* **Modes:** CONTACT, GOVERNANCE
+* **Purpose:** Prepare a meeting brief for sensitive/high-stakes stakeholder interactions.
+* **Acceptance checks:** content_validation (objective, status, asks, risks, decision points)
+* **Evidence:** meeting_brief + linked packet artifacts
+* **Timebox:** 20–60
+* **Failure paths:** if prep exceeds scope, reduce to objective/status/asks core brief.
+
+### `FollowUpStrategy`
+
+* **Modes:** CONTACT
+* **Purpose:** Convert sent items or meetings into timed follow-up sequence and ownership.
+* **Acceptance checks:** content_validation (timeline + owner + trigger conditions present)
+* **Evidence:** followup_schedule + queue updates
+* **Timebox:** 15–30
+* **Failure paths:** if uncertainty high, schedule one default follow-up window and review point.
+
+### `BriefBeforeSend`
+
+* **Modes:** CONTACT, GOVERNANCE
+* **Purpose:** Force a short quality/risk brief before sending high-impact stakeholder messages.
+* **Acceptance checks:** content_validation (intent, risk, factual claims, CTA validated)
+* **Evidence:** pre-send brief + sent_log (or deferred decision note)
+* **Timebox:** 10–20
+* **Failure paths:** if confidence low, delay send and request one specific clarifying input.
 
 ---
 

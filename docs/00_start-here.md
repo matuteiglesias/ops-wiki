@@ -8,7 +8,7 @@ sidebar_position: 10
 This wiki is a small internal manual to run a multi project life with low re entry friction. It is an API reference for an execution system, not a narrative journal.
 
 ## What this system is
-- A loop that turns projects into computable checks and evidence
+- A loop that turns projects and lightweight work units into computable progress with evidence
 - A block based day clock that selects a single mode per block
 - A verification culture: progress counts only when evidence exists
 
@@ -19,12 +19,14 @@ This wiki is a small internal manual to run a multi project life with low re ent
 
 ## How to use the wiki in 60 seconds
 1) Read the [One Pager Spec](spec-one-pager) to reorient
-2) Pick a block and choose a mode in [Day Clock and Selection](day-clock-selection)
-3) Run legal operators and produce evidence, then update frontier
+2) Pick a work object (Project or Case/Batch/Sprint/Encounter)
+3) Pick a block and choose a mode in [Day Clock and Selection](day-clock-selection)
+4) Run legal operators and produce evidence, then update frontier
 
 ## Jump
 - [Run a day](day-clock-selection#run-a-day)
 - [Modes v1](execution-model#modes-v1)
+- [Lightweight work units](data-model#lightweight-work-units)
 - [Frontier](data-model#frontier)
 - [Checks](checks-runbooks#check-types)
 

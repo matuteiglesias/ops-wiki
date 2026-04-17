@@ -24,6 +24,7 @@ Imports:
 - [Block model](#block-model)
 - [Selection policy](#selection-policy)
 - [Re-entry protocol](#re-entry-protocol)
+- [Safe mode branch (low judgment protocol)](#safe-mode-branch-low-judgment-protocol)
 - [WIP caps and archiving](#wip-caps-and-archiving)
 - [Maintenance vs focus](#maintenance-vs-focus)
 
@@ -180,6 +181,49 @@ Re-entry exists because dropouts are expected. The system is designed so returni
 - Evidence links
 - Next pointer (one line)
 - Updated due date (optional)
+
+---
+
+## Safe mode branch (low judgment protocol)
+
+Safe Mode is an operational branch for human states where decision quality is temporarily degraded.  
+It is not clinical guidance; it is a bounded execution policy.
+
+### Trigger signals
+- Late-night activation with “open everything” impulse
+- Poor sleep or cognitive fog
+- Recent substance use
+- High emotional activation or overload
+- Repeated urge to start new fronts without clear evidence path
+
+### Policy rules
+Allowed:
+- `CaptureIntake`
+- `SessionCondense`
+- `LockInSession`
+- `PrepareBlockQueue`
+- `ContactQueueGroom`
+- inventory-first tasks (list current open loops, classify, defer)
+
+Forbidden:
+- refactors and structural rewrites
+- irreversible decisions
+- opening new major fronts
+- unbounded debugging
+
+### Safe block output contract
+A Safe Mode block is valid only if it emits:
+- one structured artifact (capture/condense/queue/lock-in/checklist)
+- one bounded triage decision (what is deferred vs active)
+- one next pointer with reassessment time
+
+### Escalation back to normal mode
+Exit Safe Mode when:
+- one clean next pointer exists,
+- active fronts are bounded,
+- and the next block can select one mode/operator with clear evidence.
+
+If these are not true, schedule one more Safe Mode MAINT block instead of forcing FOCUS.
 
 ---
 
