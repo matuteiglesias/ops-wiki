@@ -14,6 +14,10 @@ This page defines the **algorithm and handoffs** between:
 - **Machine led steps** (AI agent)
 - **Joint steps** (quick review and lock)
 
+It is now part of the **main day path**, not a side appendix:
+- **BOOT + Daily Compiler Lite** is the default daily startup.
+- Use the **full compiler** when inputs are messy (many check-ins, overrides, or constraints).
+
 ## Authority and references
 
 This page does **not** redefine concepts that are defined elsewhere in the manual.
@@ -57,6 +61,19 @@ If available in your workflow, the agent may also use:
 3) **Closure Hook**
    - A short end-of-day update protocol (no long journaling required)
 
+## Quick start variants
+
+### Daily Compiler Lite (default, 6–10 min)
+Use this most days:
+1) Pick top frontier item (top FAIL or cheap WARN)
+2) Tag candidates with decision labels
+3) Set allowed work (1 deep stream + 1 wiring move max)
+4) Design first session (mode + operator + evidence + stop rule)
+5) Pre-write closure hook
+
+### Daily Compiler Full (10 steps below)
+Use when day input is complex, high-risk, or highly interdependent.
+
 ## Decisions vocabulary (used by both human and machine)
 
 Use exactly these labels:
@@ -66,7 +83,7 @@ Use exactly these labels:
 - **RESCUE**: must touch today due to risk, blockage, or time sensitivity
 - **KILL**: explicitly drop or archive
 
-## Algorithm with explicit human vs machine steps
+## Full algorithm with explicit human vs machine steps
 
 ### Step 0: Scope declaration (Human)
 **Human action**
@@ -208,8 +225,8 @@ For each scheduled session, verify:
 - no hidden “extra work” crept in
 
 If a session fails, machine downgrades:
-- EXECUTION -> PLAN_ONLY, or
-- NUDGE -> PARK, or
+- NUDGE -> PLAN_ONLY, or
+- PLAN_ONLY -> PARK, or
 - splits into an inventory-first version
 
 **Human action (optional)**
@@ -237,6 +254,20 @@ Execution is outside the scope of this page. The compiled plan is the contract.
 
 **Output**
 - Closure log entry.
+
+## Integration chain (main manual flow)
+
+Use this chain explicitly when running the day:
+1) [Frontier](data-model#frontier) ->
+2) Decision labels (PARK / PLAN_ONLY / NUDGE / RESCUE / KILL) ->
+3) Allowed work (FOCUS vs MAINT with WIP caps) ->
+4) Session design (mode + operator + evidence + stop rule) ->
+5) Closure hook (status updates + next pointers)
+
+Related entry points:
+- [Re-entry](intro#re-entry-26-min): run Lite with MAINT bias.
+- [BOOT](intro#boot-1020-min): default trigger for Lite.
+- [First focus block](intro#first-focus-block-6090-min): execute first compiled session.
 
 ## Minimal templates
 

@@ -24,6 +24,7 @@ Imports:
 - [Block model](#block-model)
 - [Selection policy](#selection-policy)
 - [Re-entry protocol](#re-entry-protocol)
+- [Safe mode branch (low judgment protocol)](#safe-mode-branch-low-judgment-protocol)
 - [WIP caps and archiving](#wip-caps-and-archiving)
 - [Maintenance vs focus](#maintenance-vs-focus)
 
@@ -34,12 +35,12 @@ Imports:
 This is the smallest protocol that keeps the system alive and makes days comparable. The day is successful if it produces evidence and reduces future decision load.
 
 ### The daily contract (v0)
-- You run BOOT once.
+- You run BOOT once, then compile with [Daily Compiler Lite](daily-plan-compiler-algorithm#daily-compiler-lite-default-610-min) (or Full when needed).
 - You run at least one focus block or one “catch-up check-in” if you are in low energy.
 - You produce at least one piece of evidence or one governance artifact that changes tomorrow.
 
 ### BOOT procedure (10–20 minutes)
-Goal: initialize state so work becomes selectable. No fixing, no debugging.
+Goal: initialize state so work becomes selectable. No fixing, no debugging. BOOT hands off directly to the Daily Plan Compiler.
 
 1. Open the system state
    - Frontier snapshot (PASS/WARN/FAIL summary)
@@ -55,10 +56,12 @@ Goal: initialize state so work becomes selectable. No fixing, no debugging.
 4. Drift guardrail
    - If debugging exceeds ~40 minutes without progress: create a [DebugPacket](execution-model#debugpacket) and stop.
 
-BOOT output:
-- One chosen mode
-- One planned OperatorRun
-- One expected evidence line
+BOOT + Compiler Lite output:
+- Frontier pick
+- Decision label per candidate (PARK / PLAN_ONLY / NUDGE / RESCUE / KILL)
+- Allowed work set (FOCUS + MAINT)
+- One planned OperatorRun with stop rule and evidence
+- One closure hook line
 
 ### Minimal day variant (when you are late or low energy)
 - BOOT (6 minutes): choose mode + write one OperatorRun
@@ -180,6 +183,49 @@ Re-entry exists because dropouts are expected. The system is designed so returni
 - Evidence links
 - Next pointer (one line)
 - Updated due date (optional)
+
+---
+
+## Safe mode branch (low judgment protocol)
+
+Safe Mode is an operational branch for human states where decision quality is temporarily degraded.  
+It is not clinical guidance; it is a bounded execution policy.
+
+### Trigger signals
+- Late-night activation with “open everything” impulse
+- Poor sleep or cognitive fog
+- Recent substance use
+- High emotional activation or overload
+- Repeated urge to start new fronts without clear evidence path
+
+### Policy rules
+Allowed:
+- `CaptureIntake`
+- `SessionCondense`
+- `LockInSession`
+- `PrepareBlockQueue`
+- `ContactQueueGroom`
+- inventory-first tasks (list current open loops, classify, defer)
+
+Forbidden:
+- refactors and structural rewrites
+- irreversible decisions
+- opening new major fronts
+- unbounded debugging
+
+### Safe block output contract
+A Safe Mode block is valid only if it emits:
+- one structured artifact (capture/condense/queue/lock-in/checklist)
+- one bounded triage decision (what is deferred vs active)
+- one next pointer with reassessment time
+
+### Escalation back to normal mode
+Exit Safe Mode when:
+- one clean next pointer exists,
+- active fronts are bounded,
+- and the next block can select one mode/operator with clear evidence.
+
+If these are not true, schedule one more Safe Mode MAINT block instead of forcing FOCUS.
 
 ---
 
