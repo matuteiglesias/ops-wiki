@@ -1,6 +1,6 @@
 ---
 title: Ops under Office
-sidebar_position: 5
+sidebar_position: 34
 slug: /ops-under-office
 ---
 

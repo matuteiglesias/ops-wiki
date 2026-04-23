@@ -1,6 +1,6 @@
 ---
 title: Office Compile v0
-sidebar_position: 4
+sidebar_position: 33
 slug: /office-compile
 ---
 

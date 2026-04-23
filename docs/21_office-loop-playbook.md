@@ -1,6 +1,6 @@
 ---
 title: Office Loop Playbook
-sidebar_position: 21
+sidebar_position: 31
 slug: /office-loop-playbook
 ---
 
