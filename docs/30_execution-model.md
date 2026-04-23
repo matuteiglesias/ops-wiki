@@ -5,7 +5,7 @@ sidebar_position: 40
 ---
 
 ## Module header
-Purpose: define the runtime for work: modes, operators, runs, debug packets, stop rules, and evidence patterns.
+Purpose: define the runtime for work: modes, operators, runs, debug packets, stop rules, and evidence patterns. Runtime remains owned by Ops; under Office, selection source changes but runtime primitives do not.
 
 Exports:
 - Mode
@@ -103,11 +103,11 @@ Use this structure when defining a new operator:
 
 ## OpRun
 
-An OpRun is an instance of running an operator against a project in a chosen mode.
+An OpRun is an instance of running an operator against exactly one work object in a chosen mode.
 
 ### Fields
 - `op_id`
-- `project_id`
+- `work_object_id` (project or lightweight work unit)
 - `mode_id`
 - `timestamp_start`
 - `timestamp_end` (optional but recommended)
@@ -119,9 +119,10 @@ An OpRun is an instance of running an operator against a project in a chosen mod
 - `next_pointer` (single line: what to do next)
 
 ### Invariants
-- OpRun must reference exactly one project.
+- OpRun must reference exactly one work object.
 - OpRun must declare exactly one mode.
 - OpRun must leave a next pointer.
+- Some GOVERNANCE/CONTACT runs may target office-nominated packets, cases, or briefs rather than full projects.
 - OpRun result must be grounded in acceptance results, not feelings.
 
 ---
@@ -131,7 +132,7 @@ An OpRun is an instance of running an operator against a project in a chosen mod
 A DebugPacket is an anti-drift unit for failures and unclear problems. It is the standard closure artifact when debugging would otherwise expand.
 
 ### Fields
-- `project_id`
+- `work_object_id` (project or lightweight work unit)
 - `symptom` (observable)
 - `context` (what changed recently, if known)
 - `minimal_repro` (commands, inputs, expected vs actual)
