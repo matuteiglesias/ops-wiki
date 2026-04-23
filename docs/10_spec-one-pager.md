@@ -7,10 +7,15 @@ sidebar_position: 20
 ## Purpose
 Canonical reference for the ontology. This page is stable and changes rarely.
 
-This system exists to run a multi-project life with low re-entry friction by turning work into modes, operators, checks, and evidence. Success means reduced decision load and verifiable artifacts.
+This system exists to run a multi-project life with low re-entry friction. Office governs selection/preparation and hands work down to Ops, while Ops turns selected work into modes, operators, checks, and evidence. Success means reduced decision load and verifiable artifacts.
+
+## Office compatibility note
+This stable ontology page now runs alongside [Office Charter](office-charter) and [Ops under Office](ops-under-office).
 
 ## Core loop
-Frontier tells you what is true. Clock schedules a block. Block chooses one mode. Mode allows only some operators. Operators produce evidence. Evidence updates frontier.
+Top-level loop: **Office compiles -> Principal decides (as needed) -> Ops executes -> Office reingests**.
+
+Ops execution loop (inside that top-level loop): Frontier tells you what is true. Clock schedules a block. Block chooses one mode. Mode allows only some operators. Operators produce evidence. Evidence updates frontier.
 
 Entry rule: when input starts as raw human context (speech, mixed fronts, live notes), run intake/capture operators first (`CaptureIntake` → `SessionCondense` → `NextPointerFromCapture`) before standard execution operators.
 
@@ -61,6 +66,34 @@ Rules:
 - Work units may hang from a project or exist independently.
 - Work units do not require VAC chains or endpoints.
 - Promote to project only if continuity/maintenance needs emerge.
+
+### OfficeCompile
+Office-prepared day subset and posture package for Ops execution.
+
+Fields:
+- `compile_id, date, nominated_work_objects[], block_candidates[], support_queue[], carry_state_ref, assumptions, constraints`
+
+Rules:
+- Ops should select from accepted compile artifacts when available.
+- Direct raw-universe selection is fallback/manual behavior.
+
+### PrincipalBrief
+Decision and exception surface delivered to Principal.
+
+Fields:
+- `brief_id, date, decisions_required[], exceptions[], risk_notes, approvals, deferrals`
+
+Rules:
+- Principal receives briefs/exceptions; execution routing remains in Ops once decisions are made.
+
+### CarryState
+Rolling posture object that carries context across days/blocks.
+
+Fields:
+- `carry_id, active_constraints, risk_posture, continuity_notes, next_review`
+
+Rules:
+- Carry state informs Office compile and BOOT posture before first block selection.
 
 ### VAC chain
 Defines value in the world.
@@ -146,7 +179,7 @@ Operator fields:
 - `op_id, mode(s), inputs, steps, outputs, acceptance_checks, timebox, failure_paths`
 
 Operator run fields:
-- `op_id, project_id, mode_id, timestamp, inputs_used, outputs_written, result, next_pointer`
+- `op_id, work_object_id, mode_id, timestamp, inputs_used, outputs_written, result, next_pointer`
 
 Rule:
 - If there is no evidence plus next pointer, it does not count.
@@ -156,7 +189,7 @@ Rule:
 Anti-drift unit for failures and unclear problems.
 
 Fields:
-- `project_id, symptom, minimal_repro, hypotheses, experiments, decision, resolution_or_next, time_spent`
+- `work_object_id, symptom, minimal_repro, hypotheses, experiments, decision, resolution_or_next, time_spent`
 
 Rule:
 - After ~40 minutes of debugging drift, create a packet and either exit or schedule explicitly.
@@ -195,6 +228,8 @@ Cadence rule fields:
 Rules:
 - Re-entry must be low friction.
 - Catch-up check-in beats shame.
+- By default, schedule Office-nominated work objects from accepted compile artifacts.
+- Direct scheduling on raw project/work-unit space is fallback/manual mode.
 - A block selects one mode; mode constrains legal operators.
 
 ---
@@ -239,6 +274,8 @@ Rules:
 
 ## Operational rules
 - One block, one mode. Mode constrains legal operators.
+- Selection should come from accepted Office compile when available.
+- Direct raw-universe selection is fallback, not default.
 - Evidence must match the mode evidence pattern or it does not count.
 - Prefer bounded debug packets over endless debugging.
 - Reduce WARNs in maintenance blocks (runbooks, prereqs, scaffolds).

@@ -4,11 +4,13 @@ title: "Intro"
 sidebar_position: 0
 ---
 
-This wiki is an operator console.
+This wiki is the Ops execution console within the larger Office-governed operating loop.
 
-If you have 2 minutes, follow **Re-entry**.
-If you have 10 minutes, run **BOOT + Daily Compiler Lite**.
-If you have 60–90 minutes, follow **First Focus Block**.
+Default top-level sequence: **Office compiles -> Principal decides (as needed) -> Ops executes -> Office reingests**. This page covers the Ops-side quick entry points inside that loop.
+
+If you have 2 minutes, follow **Re-entry** (prefer Office artifacts if available; otherwise use intake/direct fallback).
+If you have 10 minutes, run **BOOT + Daily Compiler Lite** on the accepted compile subset when available.
+If you have 60–90 minutes, follow **First Focus Block** on nominated work objects.
 
 ## Jump
 - [Re-entry (2–6 min)](#re-entry-26-min)
@@ -95,7 +97,7 @@ Next: see [Safe mode branch](day-clock-selection#safe-mode-branch-low-judgment-p
 
 ## BOOT (10–20 min)
 
-Use this at the start of a normal day. Goal is to make the next block executable with low choice.
+Use this at the start of Ops execution for the day. Goal is to make the next block executable with low choice.
 
 If BOOT input is not project-clean (speech + context blend), do a short intake pass first (10–20 min total still valid):
 1) `CaptureIntake`
@@ -103,27 +105,36 @@ If BOOT input is not project-clean (speech + context blend), do a short intake p
 3) `NextPointerFromCapture`
 Then continue with project/mode selection below.
 
-1) Open the spine
-- [One Pager Spec](spec-one-pager)
-- Your frontier snapshot (PASS/WARN/FAIL)
-- Your due check-ins (cadence list)
+1) Open the Office-compiled execution spine (default)
+- accepted `today_compile`
+- `block_candidates`
+- support brief/context
+- current carry posture
 
-2) Pick today’s first mode (one only)
+If compile artifacts are missing or stale, use fallback inputs:
+- frontier snapshot (PASS/WARN/FAIL)
+- due check-ins (cadence list)
+
+2) Open the execution references
+- [One Pager Spec](spec-one-pager)
+
+3) Pick today’s first mode (one only)
 Use your default: if uncertain, choose MAINT + GOVERNANCE.
 
 Mode reference:
 - [Modes v1](execution-model#modes-v1)
 
-3) Select one work object (project or lightweight unit)
+4) Select one work object (project or lightweight unit)
 - If you have a clear active project, pick that.
 - If work is short/situational, pick a `Case`, `Batch`, `Sprint`, or `Encounter`.
+- By default, select from the Office-nominated subset; select directly from raw universe only in fallback/manual mode.
 - Prefer FAIL/WARN cleanup for projects; prefer tight objective + bounded horizon for lightweight units.
 
-4) Pre-write the operator run
+5) Pre-write the operator run
 Write a single planned OpRun line:
 - `work_object_id + operator + expected evidence + stop rule`
 
-5) Set the stop rule (anti-drift)
+6) Set the stop rule (anti-drift)
 If you are not closer to evidence by ~40 minutes:
 - create a DebugPacket and stop.
 
@@ -140,14 +151,15 @@ By the end of BOOT, you should have one compact chain:
 - **Session design**: one first OpRun with evidence + stop rule
 - **Closure hook**: one line for end-of-day update
 
-This chain comes from the [Daily Plan Compiler](daily-plan-compiler-algorithm). BOOT is now the short entry route into that compiler.
+This chain comes from the [Daily Plan Compiler](daily-plan-compiler-algorithm). BOOT is now the short Ops-side entry route into that compiler.
 
 ## Daily Compiler Lite (6–10 min)
 
-Use this right after BOOT on normal days. It is the default path for turning intent into a runnable day.
+Use this right after BOOT on normal days. By default, this is Ops-side narrowing on the accepted Office compile. If Office artifacts are unavailable, use it as a legacy/direct compile path.
 
-1) Frontier pick (60–90 seconds)
-- Select top 1 FAIL or top 1 cheap WARN.
+1) Candidate pick (60–90 seconds)
+- From accepted compile/block candidates, select top 1 FAIL or top 1 cheap WARN.
+- Fallback/manual mode: pick directly from frontier snapshot.
 - Keep everything else parked for now.
 
 2) Decision labels (2–3 minutes)
@@ -201,19 +213,24 @@ References:
 
 Do not browse docs. Use the spine.
 
-1) Read the loop:
+1) Read the top-level loop:
+- [Office Loop Playbook](office-loop-playbook)
+- [Office Charter](office-charter)
+- [Ops under Office](ops-under-office)
+
+2) Read the execution ontology:
 - [One Pager Spec](spec-one-pager)
 
-2) If you need a schedule:
+3) If you need a schedule:
 - [Day Clock and Selection](day-clock-selection)
 
-3) If you need truth objects:
+4) If you need truth objects:
 - [Data Model](data-model)
 
-4) If you need legal moves:
+5) If you need legal moves:
 - [Execution Model](execution-model)
 
-5) If you need proof rules:
+6) If you need proof rules:
 - [Checks and Runbooks](checks-runbooks)
 
 ---

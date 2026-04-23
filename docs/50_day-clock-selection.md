@@ -32,17 +32,26 @@ Imports:
 
 ## Run a day
 
-This is the smallest protocol that keeps the system alive and makes days comparable. The day is successful if it produces evidence and reduces future decision load.
+This is the Ops run-a-day protocol under Office governance. It keeps days comparable while preserving execution autonomy. The day is successful if it produces evidence, reduces future decision load, and returns closure for Office reingest.
 
 ### The daily contract (v0)
-- You run BOOT once, then compile with [Daily Compiler Lite](daily-plan-compiler-algorithm#daily-compiler-lite-default-610-min) (or Full when needed).
-- You run at least one focus block or one “catch-up check-in” if you are in low energy.
-- You produce at least one piece of evidence or one governance artifact that changes tomorrow.
+- Read accepted Office compile artifacts first (`today_compile`, `block_candidates`, support context, carry posture).
+- Run BOOT once on the nominated subset, then compile with [Daily Compiler Lite](daily-plan-compiler-algorithm#daily-compiler-lite-default-610-min) (or Full when needed).
+- Execute at least one focus block or one catch-up check-in if energy is low.
+- Produce at least one piece of evidence or governance artifact and return closure outputs for Office reingest.
+
+Direct/manual path remains valid when Office artifacts are missing, stale, or intentionally bypassed.
 
 ### BOOT procedure (10–20 minutes)
 Goal: initialize state so work becomes selectable. No fixing, no debugging. BOOT hands off directly to the Daily Plan Compiler.
 
-1. Open the system state
+1. Open accepted compile context (default)
+   - `today_compile`
+   - `block_candidates`
+   - support brief/context
+   - current carry posture
+
+   Fallback/manual inputs when compile is missing/stale:
    - Frontier snapshot (PASS/WARN/FAIL summary)
    - Due check-ins (cadence list)
 
@@ -50,7 +59,7 @@ Goal: initialize state so work becomes selectable. No fixing, no debugging. BOOT
    - [Modes v1](execution-model#modes-v1) are the only allowed crafts.
 
 3. Emit the first executable run
-   - Write 1 OperatorRun: `project_id + operator + expected evidence`
+   - Write 1 OperatorRun: `work_object_id + operator + expected evidence`
    - Set a timebox and a stop rule
 
 4. Drift guardrail
@@ -69,6 +78,9 @@ BOOT + Compiler Lite output:
 - Close-lite (2 minutes): next pointer
 
 This preserves continuity without forcing deep work.
+
+### Direct mode fallback
+Use direct mode when Office compile artifacts are missing, stale, or intentionally bypassed for a bounded reason. In direct mode, selection starts from frontier/cadence/raw candidate space, and the reason for bypass should be written in the closure hook.
 
 ---
 
@@ -119,14 +131,15 @@ Blocks are the scheduling atoms. Each block selects exactly one mode and therefo
 Selection policy consumes frontier, cadence, and energy state to decide what block to run next.
 
 ### Inputs (v0)
-- Frontier snapshot per project: PASS/WARN/FAIL and which endpoints
-- Cadence due list: which projects are due or overdue
+- Accepted compile/nominated candidate set (`today_compile`, `block_candidates`)
+- Frontier snapshot per work object: PASS/WARN/FAIL and which endpoints
+- Cadence due list: which work objects are due or overdue
 - Energy state: high / medium / low
 - Time available: next block duration
-- WIP cap: max active projects allowed
+- WIP cap: max active work objects allowed
 
 ### Output (v0)
-- `selected_project_id`
+- `selected_work_object_id` (derive from Office subset by default)
 - `selected_mode`
 - `selected_operator` (or “runbook/prereq reduction” for MAINT)
 - `expected_evidence`
@@ -135,11 +148,11 @@ Selection policy consumes frontier, cadence, and energy state to decide what blo
 ### Policy algorithm (v0)
 
 1) Always start with truth:
-- Prefer projects that are **FAIL** and due (or critical severity endpoints).
+- Prefer nominated work objects that are **FAIL** and due (or critical severity endpoints).
 - If no FAIL are actionable today, prefer WARN that is cheap to clear.
 
 2) Respect cadence:
-- If a project is overdue, it gets a “catch-up check-in” before new work.
+- If a work object is overdue, it gets a “catch-up check-in” before new work.
 
 3) Match work to energy:
 - **Low energy**: MAINT block to reduce WARNs or CONTACT sprint.
@@ -151,7 +164,7 @@ Selection policy consumes frontier, cadence, and energy state to decide what blo
 - Choose operators with clear evidence outputs.
 
 5) Enforce WIP:
-- If WIP cap is reached, do not start a new project. Reduce WARNs or close loops.
+- If WIP cap is reached, do not start a new work object. Reduce WARNs or close loops.
 
 ### Selection heuristics (v0)
 - MAINT default: clear the top WARN that blocks execution (missing runbook or prereq scaffold).
