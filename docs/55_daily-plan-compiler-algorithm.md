@@ -7,16 +7,16 @@ sidebar_position: 65
 
 ## Purpose
 
-Turn a messy day input set (scheduled check-ins + overrides + clock) into a compiled day plan that is executable, evidence producing, and resistant to sprawl.
+Turn day inputs into a compiled Ops plan that is executable, evidence producing, and resistant to sprawl. Default source surface is accepted Office artifacts; raw candidate compilation is fallback/manual.
 
 This page defines the **algorithm and handoffs** between:
 - **Human led steps** (you)
 - **Machine led steps** (AI agent)
 - **Joint steps** (quick review and lock)
 
-It is now part of the **main day path**, not a side appendix:
-- **BOOT + Daily Compiler Lite** is the default daily startup.
-- Use the **full compiler** when inputs are messy (many check-ins, overrides, or constraints).
+Positioning:
+- **Assistant-Guided Daily Compile** is the practical artifact-driven path when Office artifacts are already attached.
+- This page is the deeper/manual algorithm and legacy fallback when artifacts must be rebuilt or audited.
 
 ## Authority and references
 
@@ -24,31 +24,27 @@ This page does **not** redefine concepts that are defined elsewhere in the manua
 
 References (authoritative elsewhere):
 - Time blocks and definitions: **FOCUS**, **MAINT** (see time blocking section in the manual)
-- Modes and how to use them (GOVERNANCE, EXECUTION, etc.)
+- Modes and how to use them (PIPELINE, TOOLSMITH, SERVICE, CONTRACT, GOVERNANCE, CONTACT)
 - Evidence conventions, naming conventions, stop rules, WIP limits (if defined elsewhere)
 
 This page only describes **how to compile a day plan** using those existing primitives.
 
 ## Inputs
 
-### Human provided inputs (required)
-1) **Check-in set**
-   - Projects with scheduled check-ins for the last N days (default N = 5)
+### Office artifacts first (default)
+1) **office_summary**
+2) **principal_brief_today**
+3) **today_compile**
+4) **support_queue**
+5) **block_candidates**
+6) **Clock + hard constraints** (FOCUS/MAINT windows, fixed commitments, energy limits)
 
-2) **Overrides**
-   - Non-project priorities and constraints (examples: job seeking region focus, observability push, stakeholder comms sweep, run)
-
-3) **Clock**
-   - Today’s time blocks (the pre-defined sequence of FOCUS and MAINT windows)
-
-4) **Hard constraints**
-   - Work-until time, fixed commitments, travel constraints, energy limits, etc.
-
-### Machine accessible inputs (optional)
-If available in your workflow, the agent may also use:
-- A current projects sheet snapshot (or pasted table)
-- Recent frontier board state (yesterday)
-- Any pre-existing “registry” pages or runbooks in the manual
+### Fallback/manual acquisition inputs
+Use these when Office artifacts are missing or stale:
+- Raw check-in set (last N days, default N = 5)
+- Overrides and constraints list
+- Raw candidate list + micro-status pass
+- Current frontier board snapshot
 
 ## Outputs
 
@@ -72,7 +68,9 @@ Use this most days:
 5) Pre-write closure hook
 
 ### Daily Compiler Full (10 steps below)
-Use when day input is complex, high-risk, or highly interdependent.
+Use when day input is complex, high-risk, highly interdependent, or artifacts must be rebuilt manually.
+
+See also: [Assistant-Guided Daily Compile](assistant-guided-daily-compile) for the lighter artifact-driven operational path.
 
 ## Decisions vocabulary (used by both human and machine)
 
@@ -96,21 +94,21 @@ Use exactly these labels:
 
 ---
 
-### Step 1: Provide the raw candidate list (Human)
-**Human action**
-- Paste or list:
-  - scheduled check-in projects (last N days)
-  - overrides
-  - fixed commitments relevant to the day
+### Step 1: Acquire candidate surface (Human)
+**Human action (default)**
+- Confirm attached Office artifacts (`today_compile`, `block_candidates`, support queue) are current and accepted.
+
+**Fallback/manual action**
+- Paste or list scheduled check-ins, overrides, and fixed commitments when artifacts are missing.
 
 **Output**
-- One list, not yet structured.
+- One candidate surface (artifact-driven by default; raw list in fallback).
 
 ---
 
-### Step 2: Project micro-status pass (Human)
-**Human action**
-For each item in the check-in set (and each override that behaves like a project), provide short bullets:
+### Step 2: Micro-status pass (Human)
+**Human action (fallback/manual)**
+For each raw item in the check-in set (and each override that behaves like a work object), provide short bullets:
 - status: green/yellow/red/unknown
 - change since last touch (or “none”)
 - bottleneck (one phrase)
@@ -258,11 +256,12 @@ Execution is outside the scope of this page. The compiled plan is the contract.
 ## Integration chain (main manual flow)
 
 Use this chain explicitly when running the day:
-1) [Frontier](data-model#frontier) ->
-2) Decision labels (PARK / PLAN_ONLY / NUDGE / RESCUE / KILL) ->
-3) Allowed work (FOCUS vs MAINT with WIP caps) ->
-4) Session design (mode + operator + evidence + stop rule) ->
-5) Closure hook (status updates + next pointers)
+1) Accepted Office compile (`today_compile` + `block_candidates`) ->
+2) [Frontier](data-model#frontier) narrowing inside nominated subset ->
+3) Decision labels (PARK / PLAN_ONLY / NUDGE / RESCUE / KILL) ->
+4) Allowed work (FOCUS vs MAINT with WIP caps) ->
+5) Session design (mode + operator + evidence + stop rule) ->
+6) Closure hook (status updates + next pointers for Office reingest)
 
 Related entry points:
 - [Re-entry](intro#re-entry-26-min): run Lite with MAINT bias.

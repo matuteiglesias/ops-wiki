@@ -7,6 +7,8 @@ sidebar_position: 70
 ## Purpose
 Unit test for the ontology. Show one project going from undefined to a PASS frontier state, using the smallest set of objects and operators.
 
+Note: this is an inner Ops execution walkthrough, not the full Office-governed daily loop. It assumes selection/nominating has already happened upstream.
+
 This walkthrough is not a claim about how you will always execute work. It is a canonical example that makes the system legible, and it is written to remain forward-compatible with future automation (prepared blocks, precomputed operator queues, auto checks).
 
 ## Jump
@@ -24,6 +26,8 @@ This walkthrough is not a claim about how you will always execute work. It is a 
 ---
 
 ## Scenario and goal
+
+Preface: project nomination/selection is assumed complete. Office-side compilation is out of scope for this page.
 
 Pick a concrete but generic project shape:
 
@@ -230,6 +234,7 @@ Links:
 This walkthrough is written to remain compatible with “prepared blocks” and precomputed action queues.
 
 ### What the future system can add without changing this page
+- In normal operation, the work object usually arrives via Office compile rather than raw direct selection.
 - A script that reads frontier + cadence and generates candidate OperatorRuns per mode
 - A block preparation step that precomputes “if you choose PIPELINE, here are the top 3 legal ops with expected evidence”
 - Automatic check execution for smoke and health checks
