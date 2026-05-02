@@ -44,7 +44,6 @@ const pillars: PillarCard[] = [
     primary: '/docs/office-charter',
     secondary: [
       {label: 'Office Compile', to: '/docs/office-compile'},
-      {label: 'Loop Playbook', to: '/docs/office-loop-playbook'},
     ],
   },
   {

@@ -79,7 +79,6 @@ const config: Config = {
           items: [
             {label: 'Office Charter', to: '/docs/office-charter'},
             {label: 'Office Compile', to: '/docs/office-compile'},
-            // {label: 'Office Loop Playbook', to: '/docs/office-loop-playbook'},
             {label: 'Ops under Office', to: '/docs/ops-under-office'},
           ],
         },

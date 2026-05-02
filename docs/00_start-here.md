@@ -28,7 +28,6 @@ This wiki is a small internal execution manual inside a broader Office-governed 
 Fallback/manual path: if Office artifacts are missing or intentionally bypassed, run direct BOOT + compiler from frontier/cadence inputs.
 
 ## Jump
-<!-- - [Office Loop Playbook](office-loop-playbook) -->
 - [Office Charter](office-charter)
 - [Ops under Office](ops-under-office)
 - [Run a day](day-clock-selection#run-a-day)
@@ -39,6 +38,5 @@ Fallback/manual path: if Office artifacts are missing or intentionally bypassed,
 
 ## See also
 - [One Pager Spec v1](spec-one-pager)
-<!-- - [Office Loop Playbook](office-loop-playbook) -->
 - [Office Charter](office-charter)
 - [Ops under Office](ops-under-office)
