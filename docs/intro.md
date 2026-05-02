@@ -214,7 +214,7 @@ References:
 Do not browse docs. Use the spine.
 
 1) Read the top-level loop:
-- [Office Loop Playbook](office-loop-playbook)
+<!-- - [Office Loop Playbook](office-loop-playbook) -->
 - [Office Charter](office-charter)
 - [Ops under Office](ops-under-office)
 

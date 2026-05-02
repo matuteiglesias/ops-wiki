@@ -92,8 +92,7 @@ Minimum fields to consider an operator “defined”:
 - [Frontier semantics](data-model#frontier)
 
 ## See also
-- [Templates](templates)
-- [Walkthrough: One Project End-to-End](walkthrough-one-project)
+<!-- - [Templates](templates) -->
 - [One Pager Spec](spec-one-pager)
 
 

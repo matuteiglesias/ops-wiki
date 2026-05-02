@@ -164,6 +164,54 @@ Transforms live cognition and events into artifacts that Office can classify and
 ### KB Contracts
 Provides technical and structural constraints so Office does not coordinate drifted or invalid seams.
 
+
+
+# Office Loop Playbook
+
+## Purpose
+
+Operate the office through a short loop that compiles, decides, executes, and reingests without adding more automation first.
+
+The goal of this stage is not elegance. It is to expose real system weaknesses through live use.
+
+## Sequence
+
+1. Office compiles
+2. Principal decides
+3. Ops executes
+4. Office reingests
+
+---
+
+## Daily minimum protocol
+
+1. Read `office_summary.md`
+2. Read `principal_brief_today.md`
+3. Decide 2 to 4 things maximum
+4. Pick 1 principal block and 1 staff-preparable block
+5. Execute through this playbook
+6. Close with a short reingest note:
+   - what changed
+   - what did not change
+   - what brief was missing
+
+---
+
+## Friction log
+
+Track only short tags:
+
+- `missing_bundle_field`
+- `bad_priority`
+- `brief_too_vague`
+- `should_have_been_escalation`
+- `should_not_have_reached_principal`
+- `needs_new_artifact_type`
+
+---
+
+
+
 ## Minimal outputs of Oficina
 
 At minimum, Oficina must be able to produce:
@@ -181,6 +229,7 @@ At minimum, Oficina must be able to produce:
 **Oficina governs selection, preparation, escalation, and coordination.  
 Ops governs execution and evidence.  
 The Principal governs judgment and direction.**
+Do not add more automation until repeated live use shows where the real bottlenecks are.
 
 ## Version note
 
@@ -188,3 +237,4 @@ This is **v0**.
 
 The goal is not institutional perfection.
 The goal is a compact, usable governance layer that can already support daily and weekly operation without forcing the Principal to rebuild the world manually each time.
+

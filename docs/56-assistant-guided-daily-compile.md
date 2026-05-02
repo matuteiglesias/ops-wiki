@@ -106,80 +106,8 @@ If the artifacts are insufficient, the assistant should say so clearly and ask o
 
 ---
 
-## Working assumptions
 
-At this stage of the system:
-
-- Office compile already exists
-- Principal has either accepted or is about to accept the current compilation
-- Ops execution is still mostly human-executed
-- Reingest and full cycle closure are not yet fully automated
-- The current bottleneck is execution, not architecture
-
-Therefore the assistant should optimize for:
-
-- choosing
-- narrowing
-- packaging
-- clarifying
-- reducing startup cost
-
----
-
-## Core workflow
-
-## 1. Read the compiled state
-
-The assistant should first read:
-
-1. `office_summary.md`
-2. `principal_brief_today.md`
-3. `today_compile.md`
-
-From these, it should infer:
-
-- what is principal-facing today
-- what is staff-preparable today
-- what are current escalations
-- what are current block candidates
-
-## 2. Read only the relevant child briefs
-
-The assistant should then read only the child briefs relevant to today's top items.
-
-Examples:
-- if an escalation is present, read its `decision__*.md`
-- if a support-needed item is in focus, read its `healthcheck__*.md` or `unlocker__*.md`
-- if a candidate block already has an `execution__*.md`, use it
-
-Do not read everything by default.
-
-## 3. Resolve simple decisions below the principal when possible
-
-The assistant may resolve easy or defaultable matters when the artifacts already imply a safe default.
-
-Examples:
-- if a decision brief already recommends a health check first, accept that as the proposed next block
-- if an unlocker brief clearly identifies one bounded next unlock, propose that unlock directly
-- if an execution brief already gives a usable entry path, preserve it
-
-The assistant should **not** pretend to decide high-stakes matters that still clearly require the principal.
-
-## 4. Return a compiled day or compiled next blocks
-
-The assistant should return one of these two outputs, depending on the prompt:
-
-### A. Daily compile
-A compact proposal for today's work.
-
-### B. Next compiled blocks
-A small list of bounded execution blocks, regardless of whether they all fit in one day.
-
-Both outputs should stay small.
-
----
-
-## Output contract
+# Output contract
 
 The assistant should return the answer in this structure:
 
@@ -289,15 +217,7 @@ If a brief reveals a concrete inconsistency, such as a broken path, the assistan
 
 ---
 
-## Maximum allowed complexity
 
-The assistant should keep the response bounded.
-
-### Hard limits
-- maximum 3 proposed blocks
-- maximum 2 unresolved principal questions
-- maximum 1 fallback block
-- no broad system redesign section
 
 ### Preferred length
 Short enough that the human can read it and start working immediately.

@@ -34,7 +34,6 @@ const pillars: PillarCard[] = [
     primary: '/docs/spec-one-pager',
     secondary: [
       {label: 'Data Model', to: '/docs/data-model'},
-      {label: 'Templates', to: '/docs/templates'},
     ],
   },
   {
@@ -67,7 +66,6 @@ const pillars: PillarCard[] = [
     primary: '/docs/execution-model',
     secondary: [
       {label: 'Operator Registry', to: '/docs/operator-registry'},
-      {label: 'Walkthrough', to: '/docs/walkthrough-one-project'},
     ],
   },
   {
@@ -85,7 +83,7 @@ const pillars: PillarCard[] = [
     id: '07',
     title: 'Thin Staff Interface',
     image: 'Prepare, route, post',
-    role: 'A public placeholder for the new staff primitives. This routes to the existing office and assistant compile pages instead of inventing new docs.',
+    role: 'Staff Preparation Surface. This routes to the existing office and assistant compile pages instead of inventing new docs.',
     primary: '/docs/assistant-guided-daily-compile',
     secondary: [
       {label: 'Office Compile', to: '/docs/office-compile'},

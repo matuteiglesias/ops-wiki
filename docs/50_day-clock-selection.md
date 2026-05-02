@@ -285,7 +285,6 @@ A practical rule that prevents the system from turning into constant refactoring
 
 ## Used by
 - [Boot procedure](start-here)
-- [Walkthrough](walkthrough-one-project)
 
 ## See also
 - [One Pager Spec](spec-one-pager)

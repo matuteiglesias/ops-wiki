@@ -3,319 +3,238 @@ id: spec-one-pager
 title: One Pager Spec v1
 sidebar_position: 20
 ---
-
 ## Purpose
-Canonical reference for the ontology. This page is stable and changes rarely.
-
-This system exists to run a multi-project life with low re-entry friction. Office governs selection/preparation and hands work down to Ops, while Ops turns selected work into modes, operators, checks, and evidence. Success means reduced decision load and verifiable artifacts.
-
-## Office compatibility note
-This stable ontology page now runs alongside [Office Charter](office-charter) and [Ops under Office](ops-under-office).
-
-## Core loop
-Top-level loop: **Office compiles -> Principal decides (as needed) -> Ops executes -> Office reingests**.
-
-Ops execution loop (inside that top-level loop): Frontier tells you what is true. Clock schedules a block. Block chooses one mode. Mode allows only some operators. Operators produce evidence. Evidence updates frontier.
-
-Entry rule: when input starts as raw human context (speech, mixed fronts, live notes), run intake/capture operators first (`CaptureIntake` → `SessionCondense` → `NextPointerFromCapture`) before standard execution operators.
-
-## Jump
-- [Objects and contracts](#objects-and-contracts)
-- [Modes v1](#modes-v1)
-- [Fast mode classifier](#fast-mode-classifier)
-- [Operators](#operators)
-- [Runbooks and checks](#runbooks-and-checks)
-- [Day clock and cadence](#day-clock-and-cadence)
-- [Evidence standard](#evidence-standard)
-- [Operational rules](#operational-rules)
-- [Drill-down index](#drill-down-index)
-
-## Imports
-- Details of objects live in [Data Model](data-model)
-- Details of runtime live in [Execution Model](execution-model)
-- Details of verification live in [Checks and Runbooks](checks-runbooks)
-- Details of scheduling live in [Day Clock and Selection](day-clock-selection)
-
+Canonical reference for the operating ontology. This page is stable and changes rarely.
+This system exists to run a multi-project life with low re-entry friction. Office governs selection, preparation, and reingest. Ops executes selected work through modes, operators, checks, and evidence. Success means reduced decision load, clean routing, and verifiable artifacts.
+## Compatibility note
+This page is the compact doctrine. Detailed contracts live in the drill-down pages:
+- [Office Charter](office-charter)
+- [Office Compile](office-compile)
+- [Ops under Office](ops-under-office)
+- [Data Model](data-model)
+- [Execution Model](execution-model)
+- [Checks and Runbooks](checks-runbooks)
+- [Day Clock and Selection](day-clock-selection)
+---
+## Core operating loop
+Top-level loop:
+1. **Office compiles** current state into a small usable surface.
+2. **Principal decides** only what truly requires judgment.
+3. **Ops executes** one bounded block from the accepted compile.
+4. **Office reingests** evidence, residue, and next pointers.
+Ops loop inside a block:
+1. Frontier says what is true.
+2. Clock allocates time.
+3. Block chooses one mode.
+4. Mode constrains legal operators.
+5. Operators produce evidence.
+6. Evidence updates frontier and carry state.
+Entry rule: when input starts as raw human context, run intake/capture first:
+```text
+CaptureIntake -> SessionCondense -> NextPointerFromCapture
+```
+Then route into standard execution.
+---
+## Core doctrine
+Rows are pathways, not tasks.
+A project may exist without being expressed now. A dormant project is not a failure. Expression is controlled by Office state, current horizon, energy budget, and support readiness.
+Useful distinctions:
+- **Alive**: the row exists and may matter later.
+- **Watched**: signals may be monitored without interrupting the human.
+- **Expected**: allowed to enter the current operating cycle.
+- **Prepared**: staff has produced enough substrate for action.
+- **Executed**: a bounded block changed state and produced evidence.
+- **Reingested**: residue became state, next pointer, or carry update.
+The system should not maximize activity. It should regulate expression.
+---
+## Office primitives
+Office is a router, regulator, and compiler. It is not a giant knowledge base and not the executor.
+Primary Office outputs:
+- `office_summary`, `principal_brief_today`, `principal_brief_week`
+- `today_compile`, `support_queue`, `escalations`, `block_candidates`
+- `clock_compile`
+Clock-facing attention routes:
+- `maint_get_queue`: expressed upkeep that should become checklist items.
+- `focus_get_queue`: expressed deep work where staff can prepare a packet.
+- `support_queue`: health checks, unlockers, decisions, context briefs.
+- `watch_queue`: non-expressed pathways that stay quiet unless triggered.
+- `post_eligible_queue`: rows that should be reingested if touched.
+Routing fields:
+- `expected`: pathway is expressed in the current cycle.
+- `human_maint`: can enter bounded maintenance.
+- `human_focus`: can require deep human work.
+- `staff_get`: staff can prepare usable substrate.
+- `staff_watch`: staff can monitor for triggers.
+- `staff_post`: staff should reingest residue after touch.
+Rule: `expected` controls expression. It does not define importance.
+---
+## Principal, Office, Staff, Ops
+### Principal
+Scarce judgment. Principal receives prepared decisions, real exceptions, explicit tradeoffs, and small accept/correct/defer choices.
+Principal should not reconstruct the whole universe.
+### Office
+Governance layer. Office compiles, routes, suppresses noise, preserves continuity, and decides what reaches Principal, Staff, Watch, MAINT, or FOCUS.
+### Staff
+Preparation and reingest layer. Staff prepares the smallest usable artifact for the next block:
+- checklist item
+- focus packet
+- health-check packet
+- unlocker brief
+- decision brief
+- post/reingest note
+Staff should not flood the human with documents.
+### Ops
+Execution layer. Ops executes accepted work through modes, operators, timeboxes, stop rules, checks, and evidence.
 ---
 
 ## Objects and contracts
-
 ### Project
 A unit of ownership and continuity.
-
-Fields:
-- `project_id, title, home, repo_path(s), default_mode, cadence, state, tags, owner_type, next_checkin_due`
-
-Rules:
-- Every project maps to at least one VAC chain.
-- Every project maps to at least one endpoint.
-
-### Work units (lightweight)
-Short-lived or situational units that should not be force-fit into full projects.
-
-Types:
-- `Case`
-- `Batch`
-- `Sprint`
-- `Encounter`
-
-Fields:
-- `id, title, objective, horizon, owner_type, state, artifacts_expected, next_pointer, project_id?`
-
-Rules:
-- Work units may hang from a project or exist independently.
-- Work units do not require VAC chains or endpoints.
-- Promote to project only if continuity/maintenance needs emerge.
-
-### OfficeCompile
-Office-prepared day subset and posture package for Ops execution.
-
-Fields:
-- `compile_id, date, nominated_work_objects[], block_candidates[], support_queue[], carry_state_ref, assumptions, constraints`
-
-Rules:
-- Ops should select from accepted compile artifacts when available.
-- Direct raw-universe selection is fallback/manual behavior.
-
-### PrincipalBrief
-Decision and exception surface delivered to Principal.
-
-Fields:
-- `brief_id, date, decisions_required[], exceptions[], risk_notes, approvals, deferrals`
-
-Rules:
-- Principal receives briefs/exceptions; execution routing remains in Ops once decisions are made.
-
-### CarryState
-Rolling posture object that carries context across days/blocks.
-
-Fields:
-- `carry_id, active_constraints, risk_posture, continuity_notes, next_review`
-
-Rules:
-- Carry state informs Office compile and BOOT posture before first block selection.
-
-### VAC chain
-Defines value in the world.
-
-Fields:
-- `vac_id, project_id, description, endpoints[], prerequisites[], owner_type`
-
-Rule:
-- VAC says what value exists; endpoints say how to verify it.
-
+Minimum fields:
+```text
+project_id, title, home, repo_path(s), default_mode, cadence, state, tags, owner_type, next_checkin_due
+```
+Rules: active projects should map to at least one value chain and one endpoint.
+### Work units
+Short-lived or situational units that should not be forced into full projects.
+Types: `Case`, `Batch`, `Sprint`, `Encounter`.
+Minimum fields:
+```text
+id, title, objective, horizon, owner_type, state, artifacts_expected, next_pointer, project_id?
+```
+Rules: work units may exist independently; promote to project only if continuity, cadence, or stable runbooks emerge.
+### Value chain
+Describes what value exists in the world.
+```text
+vac_id, project_id, description, endpoints[], prerequisites[], owner_type
+```
 ### Endpoint
 A computable done claim.
-
-Fields:
-- `endpoint_id, vac_id, type, check_method, artifacts_expected, freshness_policy, severity`
-
-Rules:
-- Endpoints must be testable.
-- Endpoints must point to evidence artifacts.
-
+```text
+endpoint_id, vac_id, type, check_method, artifacts_expected, freshness_policy, severity
+```
 ### Frontier
-Daily map of truth derived from endpoint checks.
-
-States:
-- **PASS**: checks succeed and required evidence exists
-- **WARN**: missing runbook, weak evidence, missing prerequisite, or other non-fatal deficit
-- **FAIL**: check fails or critical evidence is missing
-
-Fields:
-- `project_id, endpoint_statuses, derived_status, timestamp, evidence_links`
+Daily truth map derived from checks.
+- **PASS**: checks succeed and required evidence exists.
+- **WARN**: non-fatal deficit, weak evidence, missing runbook, stale prereq, or drift.
+- **FAIL**: check fails, critical evidence is missing, or runbook drift misleads execution.
 
 ---
 
 ## Modes v1
-A mode is a craft: mindset plus allowed moves plus evidence definition. Each time block selects exactly one mode.
-
-1. **PIPELINE**
-   - Transform inputs into validated artifacts repeatably.
-   - Done: smoke PASS plus non-trivial outputs plus content checks.
-
-2. **TOOLSMITH**
-   - Build scalable interfaces and scaffolds (CLI, templates, helpers).
-   - Done: stable interface, usage help, smoke run, predictable exit codes.
-
-3. **SERVICE**
-   - Keep a running thing reliable (bots, timers, deploys).
-   - Done: restart-safe, scheduled runs work, logs and health checks exist, runbook matches reality.
-
-4. **CONTRACT**
-   - Stabilize integration boundaries (env, API, dependencies).
-   - Done: minimal repro, fix encoded, regression guardrail, decision note if needed.
-
-5. **GOVERNANCE**
-   - Reduce decision load and constrain WIP.
-   - Done: an artifact that changes future behavior plus a next pointer.
-   - Includes intake/capture operators to turn raw human context into executable pointers.
-
-6. **CONTACT**
-   - Stakeholder and opportunity execution (applications, recruiters, sensitive meetings) with bounded prep and follow-through.
-   - Done: prepared packet/brief/draft is produced, sent/logged state is captured, and a follow-up schedule exists.
-   - Subfamilies (taxonomy-light): `OPPORTUNITY`, `RECRUITER`, `STAKEHOLDER_CASE`.
-
-Optional tag (not a mode): `MODEL/ANALYZE`
+A mode is a craft: mindset, allowed moves, and evidence definition. Each MAINT or FOCUS block selects exactly one mode.
+1. **PIPELINE**: transform inputs into validated artifacts repeatably. Done: smoke PASS, outputs, validation checks.
+2. **TOOLSMITH**: build interfaces, scaffolds, templates, helpers. Done: stable interface, usage help, smoke run, predictable exits.
+3. **SERVICE**: keep a running thing reliable. Done: restart-safe, scheduled runs work, logs and health checks exist.
+4. **CONTRACT**: stabilize integration boundaries. Done: minimal repro, fix encoded, guardrail, decision note if needed.
+5. **GOVERNANCE**: reduce decision load and constrain WIP. Done: artifact changes future behavior plus next pointer.
+6. **CONTACT**: stakeholder and opportunity execution. Done: packet/draft/touch/log plus follow-up schedule.
+Optional tag, not a mode: `MODEL/ANALYZE`.
 
 ---
 
 ## Fast mode classifier
-Default mapping from session title (override allowed, keep it rare):
-
-- **SERVICE**: deploy, domain, hosting, apache, systemd, timer, bot, stability, vercel, github pages
-- **CONTRACT**: api, integration, config, env, keyring, abi, postgres, promptflow
-- **TOOLSMITH**: cli, tool, script, framework, template, schema, setup, playbook
-- **PIPELINE**: etl, ingest, normalize, backfill, export, jsonl, mdx, csv
-- **GOVERNANCE**: strategy, review, roadmap, triage, prioritize, control tower, standards, wip
-- **CONTACT**: outreach, lead, linkedin, crm, follow-up, qualification
+Use as a default, override rarely.
+- **SERVICE**: deploy, hosting, domain, systemd, timer, bot, stability.
+- **CONTRACT**: API, integration, config, env, keyring, ABI, promptflow.
+- **TOOLSMITH**: CLI, tool, script, framework, template, schema, setup.
+- **PIPELINE**: ETL, ingest, normalize, backfill, export, jsonl, mdx, csv.
+- **GOVERNANCE**: strategy, review, roadmap, triage, control tower, WIP.
+- **CONTACT**: outreach, lead, LinkedIn, CRM, follow-up, qualification.
 
 ---
 
-## Operators
+## Operators and runs
 Operators are repeatable moves that produce instances.
-
 Operator fields:
-- `op_id, mode(s), inputs, steps, outputs, acceptance_checks, timebox, failure_paths`
-
+```text
+op_id, modes, inputs, steps, outputs, acceptance_checks, timebox, failure_paths
+```
 Operator run fields:
-- `op_id, work_object_id, mode_id, timestamp, inputs_used, outputs_written, result, next_pointer`
-
-Rule:
+```text
+op_id, work_object_id, mode_id, timestamp, inputs_used, outputs_written, result, next_pointer
+```
+Rules:
 - If there is no evidence plus next pointer, it does not count.
-- Intake/capture operators are valid first-class operators; they can emit candidate pointers and candidate case/batch/project mappings before project execution starts.
-
+- Operators must be legal in the selected mode.
+- Every operator should have a timebox and failure path.
+- Intake/capture operators are first-class operators.
 ### Debug packet
-Anti-drift unit for failures and unclear problems.
-
-Fields:
-- `work_object_id, symptom, minimal_repro, hypotheses, experiments, decision, resolution_or_next, time_spent`
-
-Rule:
-- After ~40 minutes of debugging drift, create a packet and either exit or schedule explicitly.
+Anti-drift object for failures and unclear problems.
+```text
+work_object_id, symptom, minimal_repro, hypotheses, experiments, decision, resolution_or_next, time_spent
+```
+Rule: after about 40 minutes of debugging drift, create a packet and either exit or schedule explicitly.
 
 ---
 
 ## Runbooks and checks
-Runbooks are memory. Checks are truth enforcement.
-
+Runbooks are memory. Checks enforce truth.
 Runbook types:
-- **Human runbook**: purpose, how-to, pitfalls, next steps, checklists
-- **Machine runbook**: commands, paths, fixtures, expected outputs, validation commands
-
+- **Human runbook**: purpose, how-to, pitfalls, checklists, next steps.
+- **Machine runbook**: commands, paths, fixtures, outputs, validation commands.
 Check types:
-- **Smoke**: fixture/offline validation
-- **Run live bounded**: bounded execution against live inputs
-- **Contract test**: boundary stability, minimal repro encoded
-- **Health check**: service liveness and restart-safety
-- **Content validation**: non-empty, schema, counts, invariants
-
-Rules:
-- Missing runbook is usually **WARN**.
-- Runbook drift is a failure mode (treat as **FAIL** when it misleads execution).
+- **Smoke**: fixture/offline validation.
+- **Run live bounded**: bounded execution on live inputs.
+- **Contract test**: boundary stability and minimal repro encoded.
+- **Health check**: liveness, observability, restart-safety.
+- **Content validation**: schema, counts, non-empty outputs, invariants.
+Rules: missing runbook is usually WARN; misleading runbook drift can be FAIL; checks must emit evidence.
 
 ---
 
 ## Day clock and cadence
 Scheduling is explicit and mode-constrained.
-
 Block fields:
-- `start, duration, block_type, mode_selected, allowed_ops`
-
-Cadence rule fields:
-- `frequency_days, overdue_behavior, reentry_protocol`
-
-Rules:
-- Re-entry must be low friction.
-- Catch-up check-in beats shame.
-- By default, schedule Office-nominated work objects from accepted compile artifacts.
-- Direct scheduling on raw project/work-unit space is fallback/manual mode.
-- A block selects one mode; mode constrains legal operators.
+```text
+start, duration, block_type, mode_selected, allowed_ops, evidence_expected, stop_rule
+```
+Block types:
+- **MAINT**: bounded upkeep, WARN reduction, checklists, prereqs, small repairs.
+- **FOCUS**: deep transformation toward endpoints or strategic artifacts.
+- **ADMIN**: logistics and overhead, capped.
+- **FREE**: recovery/play, no evidence required.
+Rules: one block, one mode; re-entry must be low-friction; catch-up check-in beats shame; Office-nominated work is default; raw-universe selection is fallback.
 
 ---
 
 ## Evidence standard
-Evidence is what makes progress real.
-
-Evidence link fields:
-- `artifact_path, manifest_path, log_path, commit_hash, sheet_row, evidence_type, context_type, structured_fields, source_ref`
-
-Evidence classes (explicit):
-- **Technical evidence**: logs, manifests, checks, artifacts generated by code/systems.
-- **Operational evidence**: planning/coordination artifacts that change execution state.
-- **Narrative evidence**: structured memos/briefs/notes with traceable decisions.
-- **Stakeholder evidence**: outbound/inbound artifacts tied to people/communication outcomes.
-
-Valid narrative/stakeholder examples:
-- `capture memo`
-- `meeting packet`
-- `decision brief`
-- `application packet`
-- `recruiter reply draft`
-- `closure memo`
-- `sent log`
-- `follow-up schedule`
-
-Common intake/capture evidence:
-- `capture_note`
-- `condensed_note`
-- `candidate_next_pointer`
-- `candidate_case_or_batch_or_project`
-- `promoted_artifact_links`
-
+Evidence makes progress real.
+Evidence classes:
+- **Technical**: logs, manifests, checks, generated artifacts, commits.
+- **Operational**: plans, queue updates, runbooks, carry updates.
+- **Narrative**: structured memos, briefs, closure notes, decision records.
+- **Stakeholder**: drafts, sent logs, replies, meeting packets, follow-ups.
 Rules:
-- Prefer manifests with hashes and counts.
-- Prefer deterministic outputs.
-- Evidence must be linkable from check-in notes.
-- Narrative evidence is valid evidence in `GOVERNANCE`, `CONTACT`, and lightweight work units (`Case/Batch/Sprint/Encounter`) when it is structured and traceable.
-- Narrative evidence does **not** replace technical checks/logs/manifests where technical validation is required.
+- Evidence must be traceable.
+- Prefer manifests with hashes, counts, and paths.
+- Narrative evidence is valid for GOVERNANCE, CONTACT, and lightweight work units.
+- Narrative evidence does not replace technical checks where technical validation is required.
+- Every completed block leaves evidence or a governance artifact plus next pointer.
 
 ---
 
 ## Operational rules
-- One block, one mode. Mode constrains legal operators.
-- Selection should come from accepted Office compile when available.
-- Direct raw-universe selection is fallback, not default.
-- Evidence must match the mode evidence pattern or it does not count.
-- Prefer bounded debug packets over endless debugging.
-- Reduce WARNs in maintenance blocks (runbooks, prereqs, scaffolds).
-- WIP caps matter. Archiving is an explicit state, not failure.
-- The build invariant: `npm run build` must be consistently green for deployable docs. If temporarily downgraded (warn on broken links), record it as an explicit v0 decision.
+- Office compiles before Ops executes when a current compile exists.
+- Principal handles exceptions and real tradeoffs, not raw project browsing.
+- Staff prepares just enough substrate for the next block.
+- Watch stays quiet unless a trigger fires.
+- Post/reingest happens only after touch.
+- WIP caps matter.
+- Archiving is explicit, not failure.
+- Debug drift becomes a packet.
+- Build/deploy invariants must be explicit; if relaxed, record the v0 decision.
 
 ---
 
 ## Drill-down index
-
-Objects:
-- [Project](data-model#project)
-- [Lightweight work units](data-model#lightweight-work-units)
-- [VAC chain](data-model#vac-chain)
-- [Endpoint](data-model#endpoint)
-- [Frontier](data-model#frontier)
-- [EvidenceLink](data-model#evidencelink)
-- [CadenceRule](data-model#cadencerule)
-
-Runtime:
-- [Modes v1](execution-model#modes-v1)
-- [Operator](execution-model#operator)
-- [OpRun](execution-model#oprun)
-- [DebugPacket](execution-model#debugpacket)
-
-Verification:
-- [Check taxonomy](checks-runbooks#check-taxonomy)
-- [RunbookHuman](checks-runbooks#runbookhuman)
-- [RunbookMachine](checks-runbooks#runbookmachine)
-- [Smoke](checks-runbooks#smoke)
-- [Run live bounded](checks-runbooks#run-live-bounded)
-- [Content validation](checks-runbooks#content-validation)
-
-Scheduling:
-- [Block model](day-clock-selection#block-model)
-- [Selection policy](day-clock-selection#selection-policy)
-- [Re-entry protocol](day-clock-selection#re-entry-protocol)
-- [WIP caps and archiving](day-clock-selection#wip-caps-and-archiving)
+- Objects and contracts: [Data Model](data-model), [Project](data-model#project), [Work units](data-model#lightweight-work-units), [Endpoint](data-model#endpoint), [Frontier](data-model#frontier)
+- Office layer: [Office Charter](office-charter), [Office Compile](office-compile), [Ops under Office](ops-under-office)
+- Runtime: [Execution Model](execution-model), [Operator](execution-model#operator), [OpRun](execution-model#oprun), [DebugPacket](execution-model#debugpacket)
+- Verification: [Checks and Runbooks](checks-runbooks), [Check taxonomy](checks-runbooks#check-taxonomy), [RunbookHuman](checks-runbooks#runbookhuman), [RunbookMachine](checks-runbooks#runbookmachine)
+- Scheduling: [Day Clock and Selection](day-clock-selection), [Block model](day-clock-selection#block-model), [Selection policy](day-clock-selection#selection-policy), [Re-entry protocol](day-clock-selection#re-entry-protocol)
 
 ---
 
 ## Motto
-Pick the craft. Run only its operators. Produce its evidence.
+Pick the craft. Prepare only what the block needs. Run its operators. Produce evidence. Reingest the residue.

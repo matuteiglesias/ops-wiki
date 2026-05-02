@@ -20,7 +20,7 @@ This wiki is a small internal execution manual inside a broader Office-governed 
 - The top-level daily governance layer (that role belongs to Office)
 
 ## How to use the wiki in 60 seconds
-1) If Office artifacts exist, start with [Office Loop Playbook](office-loop-playbook), [Office Charter](office-charter), and accepted compile outputs
+1) If Office artifacts exist, start with [Office Charter](office-charter), and accepted compile outputs
 2) Read [Ops under Office](ops-under-office) for execution posture and handoff rules
 3) Run BOOT + [Daily Compiler Lite](daily-plan-compiler-algorithm#daily-compiler-lite-default-610-min) in [Day Clock and Selection](day-clock-selection) on nominated subset
 4) Execute first focus block, produce evidence, and return closure outputs for Office reingest
@@ -28,7 +28,7 @@ This wiki is a small internal execution manual inside a broader Office-governed 
 Fallback/manual path: if Office artifacts are missing or intentionally bypassed, run direct BOOT + compiler from frontier/cadence inputs.
 
 ## Jump
-- [Office Loop Playbook](office-loop-playbook)
+<!-- - [Office Loop Playbook](office-loop-playbook) -->
 - [Office Charter](office-charter)
 - [Ops under Office](ops-under-office)
 - [Run a day](day-clock-selection#run-a-day)
@@ -39,7 +39,6 @@ Fallback/manual path: if Office artifacts are missing or intentionally bypassed,
 
 ## See also
 - [One Pager Spec v1](spec-one-pager)
-- [Office Loop Playbook](office-loop-playbook)
+<!-- - [Office Loop Playbook](office-loop-playbook) -->
 - [Office Charter](office-charter)
 - [Ops under Office](ops-under-office)
-- [Walkthrough](walkthrough-one-project)
