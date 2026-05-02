@@ -98,104 +98,44 @@ Blocks are the scheduling atoms. Each block selects exactly one mode and therefo
 - `evidence_expected` (one line)
 - `stop_rule` (one line)
 
-### Block invariants
-- A MAINT or FOCUS block must select one mode.
-- “One block, one mode” is enforced. If you switch modes, you are starting a new block.
-- A block completes only if it produces:
-  - evidence links, or
-  - a governance artifact plus next pointer.
 
-### Block types (intended behavior)
-- **MAINT**
-  - Purpose: reduce WARNs, clear entropy, unblock future execution.
-  - Allowed work: runbooks, prereqs, link hygiene, small repairs, contact sprints.
-  - Not allowed: unbounded debugging, large refactors, risky live changes.
 
-- **FOCUS**
-  - Purpose: produce non-trivial evidence toward a VAC chain endpoint.
-  - Allowed work: operators aligned with the chosen mode.
-  - Enforced: timebox and stop rules.
+Projects do not directly consume time. Projects request block types.
 
-- **ADMIN**
-  - Purpose: logistics, scheduling, communication overhead not captured by CONTACT.
-  - Avoid turning ADMIN into pseudo-work; cap it.
+The clock allocates scarce human capacity. Staff runs a parallel preparation and reingestion lane around the same blocks.
 
-- **FREE**
-  - Purpose: recovery and play. No evidence required.
-  - Rule: FREE is legitimate. It prevents system collapse via burnout.
+A normal 4h operating cycle contains:
+- MAINT: 30–60 min of upkeep, WARN reduction, checklists, small repairs.
+- FOCUS: 2.5–3.5h of deep work on one prepared packet.
+- POST: 10–20 min closure, evidence, next pointer, and Office reingest recommendation.
 
----
+Staff loop:
+WATCH → GET → HUMAN MAINT/FOCUS → POST
 
-## Selection policy
+WATCH senses quietly.
+GET prepares a checklist or focus packet.
+MAINT preserves the organism.
+FOCUS builds or decides.
+POST reingests touched state.
 
-Selection policy consumes frontier, cadence, and energy state to decide what block to run next.
+Weekly rhythm:
+- Monday: compile and select expressed fronts.
+- Tuesday: build.
+- Wednesday: repair plus build.
+- Thursday: externalize and integrate.
+- Friday: reingest and close.
+- Saturday: light homeostasis.
+- Sunday: recovery and low-pressure capture.
 
-### Inputs (v0)
-- Accepted compile/nominated candidate set (`today_compile`, `block_candidates`)
-- Frontier snapshot per work object: PASS/WARN/FAIL and which endpoints
-- Cadence due list: which work objects are due or overdue
-- Energy state: high / medium / low
-- Time available: next block duration
-- WIP cap: max active work objects allowed
+Rows can be alive without being expected.
+Rows can be watched without being worked.
+Rows can be prepared without being executed.
+Rows enter POST only if touched.
 
-### Output (v0)
-- `selected_work_object_id` (derive from Office subset by default)
-- `selected_mode`
-- `selected_operator` (or “runbook/prereq reduction” for MAINT)
-- `expected_evidence`
-- `stop_rule`
+Constraint:
+Staff reduces startup friction and cleanup residue. It must not create a second infinite backlog.
 
-### Policy algorithm (v0)
 
-1) Always start with truth:
-- Prefer nominated work objects that are **FAIL** and due (or critical severity endpoints).
-- If no FAIL are actionable today, prefer WARN that is cheap to clear.
-
-2) Respect cadence:
-- If a work object is overdue, it gets a “catch-up check-in” before new work.
-
-3) Match work to energy:
-- **Low energy**: MAINT block to reduce WARNs or CONTACT sprint.
-- **Medium energy**: TOOLSMITH or PIPELINE with a tight operator.
-- **High energy**: PIPELINE focus or CONTRACT with bounded debug packet plan.
-
-4) Prefer cheap, compounding moves:
-- Reduce WARNs that unblock many projects (runbook template, repo init upgrade, content gates).
-- Choose operators with clear evidence outputs.
-
-5) Enforce WIP:
-- If WIP cap is reached, do not start a new work object. Reduce WARNs or close loops.
-
-### Selection heuristics (v0)
-- MAINT default: clear the top WARN that blocks execution (missing runbook or prereq scaffold).
-- FOCUS default: run the cheapest operator that can flip an endpoint state.
-
----
-
-## Re-entry protocol
-
-Re-entry exists because dropouts are expected. The system is designed so returning is cheap and shame-free.
-
-### Re-entry triggers
-- You skipped yesterday.
-- You skipped N days.
-- You avoided a project long enough that it became “unknown”.
-
-### Re-entry rules (v0)
-1. Do not read backlogs.
-2. Refresh truth:
-   - update frontier snapshot (even if partial)
-3. Do one cheap operator:
-   - run smoke, run a health check, or create a runbook stub
-4. Emit next pointer:
-   - what the next session will do, with a timebox
-
-### Catch-up check-in template (v0)
-- Current frontier: PASS/WARN/FAIL summary
-- One operator executed (or one runbook created)
-- Evidence links
-- Next pointer (one line)
-- Updated due date (optional)
 
 ---
 
@@ -241,20 +181,6 @@ Exit Safe Mode when:
 If these are not true, schedule one more Safe Mode MAINT block instead of forcing FOCUS.
 
 ---
-
-## WIP caps and archiving
-
-WIP caps prevent mode switching chaos and endless parallel starts.
-
-### WIP cap (v0)
-- Default cap: 3–5 active projects at a time (tune later).
-- A project counts as active if you ran a focus block on it within the last cadence window.
-
-### WIP rules
-- If cap reached:
-  - Do not start a new project
-  - Use MAINT blocks to reduce WARNs across active projects
-  - Or close loops and archive explicitly
 
 ### Archiving rules
 Archiving is an explicit state, not failure. It is a governance action.
