@@ -23,6 +23,8 @@ Ops begins from an **Office-compiled subset**.
 **Oficina selects and prepares.  
 Ops executes and evidences.**
 
+The structured return handoff is documented as [Ops Closure v1](contracts/ops-closure-v1).
+
 ## What Ops now expects from Office
 
 Before Ops begins, Office should provide a compile.
@@ -90,13 +92,15 @@ This means:
 - day clock can evaluate among candidates rather than among everything
 - execution can begin with lower friction
 
-## 4. Ops produces evidence
+## 4. Ops produces evidence and closure
 Ops still must produce:
 
 - evidence
 - block closure
 - next touch exacto
 - decision to continue / pause / park / escalate
+
+For a structured handoff, normalize these fields into `artifact:ops.closure@1` as documented in [Ops Closure v1](contracts/ops-closure-v1).
 
 ## 5. Office reingests
 Office reads the outputs of Ops and updates:
@@ -105,6 +109,8 @@ Office reads the outputs of Ops and updates:
 - support queue
 - escalation queue
 - future block candidates
+
+An Ops carry value is a **recommendation**, not a direct mutation of canonical Carry State. Office remains the authority that accepts, changes, or rejects that recommendation.
 
 ---
 
@@ -175,7 +181,7 @@ Fallback mode should result in an Office update afterward.
 
 ## Outputs Ops must return to Office
 
-After execution, Ops should return structured updates.
+After execution, Ops should return structured updates. [Ops Closure v1](contracts/ops-closure-v1) is the canonical documented shape for this return packet.
 
 At minimum:
 
@@ -193,6 +199,7 @@ Suggested update to carry state:
 - Support-needed
 - Escalate
 - Parked
+- no-change
 
 ### 4. Horizon recommendation
 If work changed the time horizon, that should be suggested.
@@ -234,7 +241,7 @@ Before selecting work, read the current compile.
 Prefer Office-nominated fronts over raw-front selection.
 
 ### C. Return structured outputs
-Always return evidence, closure, and carry/update recommendations.
+Always return evidence, closure, and carry/update recommendations. Prefer the `artifact:ops.closure@1` shape when practical.
 
 That is enough to align Ops with Oficina without rewriting the whole manual.
 
@@ -246,7 +253,7 @@ A minimal conceptual update to `Start Here` would be:
 - replace “pick a work object” with:
   **select from Office-nominated work objects, unless operating in fallback mode**
 - add a final step:
-  **return update to Office**
+  **return an Ops Closure packet to Office**
 
 ## Final principle
 

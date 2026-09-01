@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "artifact:ops.closure@1",
+  "title": "Ops Closure v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "front_id",
+    "status",
+    "evidence",
+    "closure",
+    "next_touch",
+    "carry_recommendation",
+    "escalation"
+  ],
+  "properties": {
+    "contract": {"const": "artifact:ops.closure@1"},
+    "front_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["done", "partial", "blocked", "no-change"]},
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {"type": "string", "minLength": 1},
+          {"type": "object", "minProperties": 1}
+        ]
+      }
+    },
+    "closure": {"type": "string", "minLength": 1},
+    "next_touch": {"type": ["string", "null"]},
+    "carry_recommendation": {
+      "enum": ["Active", "Watch", "Support-needed", "Escalate", "Parked", "no-change"]
+    },
+    "horizon_recommendation": {
+      "enum": ["Today", "This week", "Later", "no-change"]
+    },
+    "follow_up_spawns": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": ["unlocker-brief", "health-check", "decision-packet", "nudge", "review-item", "block-candidate"]
+      }
+    },
+    "repo_evidence": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "escalation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "reason"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "reason": {"type": ["string", "null"]}
+      }
+    },
+    "notes": {"type": "string"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"enum": ["partial", "blocked"]}}},
+      "then": {"properties": {"next_touch": {"type": "string", "minLength": 1}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "done"}}},
+      "then": {"properties": {"next_touch": {"type": "null"}}}
+    }
+  ]
+}

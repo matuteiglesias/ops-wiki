@@ -14,6 +14,7 @@ authority:
   - documentation of Ops execution doctrine
   - block, mode, evidence, stop-rule, closure, and re-entry conventions
   - documentation of the Office-to-Ops execution handoff and fallback execution posture
+  - documentation of artifact:ops.closure@1
   does_not_own:
   - canonical operational Front Registry or Carry State
   - Office compile runtime or generated Office state
