@@ -21,13 +21,24 @@ Oficina exists so that:
 - non-trivial decisions are escalated cleanly
 - Ops executes from a compiled subset, not from the raw universe
 
+## Vocabulary boundary
+
+An **operational front** is not the same object as a GitHub repository.
+
+- Office governs the operational Front Registry and Carry State.
+- The GitHub `projects` control plane governs repository identity, lifecycle, topology, readiness, and repository-estate coordination.
+- A front may reference zero, one, or many repositories; a repository may support zero, one, or many fronts.
+- Repository state may inform Office, but it does not automatically determine front carry posture.
+
+Legacy references in older Ops material to “Projects / Carry State” should be read as **Front Registry / Carry State** unless the text is explicitly discussing GitHub repositories.
+
 ## What Oficina is
 
 Oficina is:
 
 - the authority that governs **staff**
 - the authority that governs interaction between:
-  - Projects / Carry State
+  - Front Registry / Carry State
   - Context
   - Capture
   - KB Contracts
@@ -35,16 +46,16 @@ Oficina is:
 - the layer that compiles operational material for the day and week
 - the layer that maintains continuity across fronts
 
-Oficina is the glue and coordination container for the rest of the system.
+Oficina is the glue and coordination container for the rest of the work system.
 
 ## What Oficina governs
 
 Oficina governs:
 
-### 1. Carry state
-It maintains and updates the operational posture of fronts.
+### 1. Front Registry and Carry State
+It maintains the operational front universe and the current posture of those fronts.
 
-Examples:
+Examples of carry posture:
 
 - Active
 - Watch
@@ -77,14 +88,15 @@ Examples:
 - re-entry material
 
 ### 4. Inter-layer coordination
-It determines how the other surfaces interact.
+It determines how the other work surfaces interact.
 
 Examples:
 
 - Context informs Office
-- Projects / Carry State provides front universe
+- Front Registry / Carry State provides the work universe and posture
 - Capture feeds new artifacts into Office
 - KB Contracts constrains seams and architecture
+- optional repository context may be supplied by the GitHub estate control plane
 - Ops executes work objects nominated by Office
 
 ## What Oficina does not do
@@ -103,7 +115,7 @@ It governs flows between systems and prepares action.
 More specifically:
 
 - it does not become the raw source registry
-- it does not become the project catalog
+- it does not become the GitHub repository registry
 - it does not become the capture system
 - it does not become the execution manual
 - it does not become the technical contract layer
@@ -152,8 +164,11 @@ Ops then:
 
 ## Relationship with the other assets
 
-### Projects / Carry State
-Provides the front universe and current posture fields.
+### Front Registry / Carry State
+Provides the operational front universe and current posture fields. This is work-estate state, not GitHub repository-estate state.
+
+### GitHub estate control plane
+Provides optional repository identity, topology, lifecycle, readiness, and observed repository context. It does not own Office front identity or carry posture.
 
 ### Context
 Provides access to sources and durable surfaces.
@@ -163,8 +178,6 @@ Transforms live cognition and events into artifacts that Office can classify and
 
 ### KB Contracts
 Provides technical and structural constraints so Office does not coordinate drifted or invalid seams.
-
-
 
 # Office Loop Playbook
 
@@ -210,8 +223,6 @@ Track only short tags:
 
 ---
 
-
-
 ## Minimal outputs of Oficina
 
 At minimum, Oficina must be able to produce:
@@ -237,4 +248,3 @@ This is **v0**.
 
 The goal is not institutional perfection.
 The goal is a compact, usable governance layer that can already support daily and weekly operation without forcing the Principal to rebuild the world manually each time.
-

@@ -1,0 +1,38 @@
+# This file declares the repository boundary and its place in the GitHub estate.
+schema_version: 1
+id: ops.execution.docs
+repository:
+  id: repo.ops-wiki
+  github: matuteiglesias/ops-wiki
+domain: operations
+system: ops.execution
+role: execution-doctrine-docs
+lifecycle: active
+authority:
+  status: declared
+  owns:
+  - documentation of Ops execution doctrine
+  - block, mode, evidence, stop-rule, closure, and re-entry conventions
+  - documentation of the Office-to-Ops execution handoff and fallback execution posture
+  does_not_own:
+  - canonical operational Front Registry or Carry State
+  - Office compile runtime or generated Office state
+  - GitHub repository registry, lifecycle, topology, or readiness authority
+  - weekly governance state or weekly human-board state
+  - runtime execution records merely because their format is documented here
+interfaces:
+  consumes: []
+  produces: []
+upstream: []
+downstream: []
+canonical_commands: []
+generated_paths: []
+verification:
+  status: documentation-only
+  last_verified: '2026-09-01'
+  command: null
+  unknowns:
+  - some older pages may retain historical project/front terminology and should be migrated only when encountered, not by broad rewrite
+maintenance:
+  cadence: quarterly
+  next_review: '2026-11-01'
