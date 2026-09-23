@@ -8,259 +8,130 @@ slug: /ops-under-office
 
 ## Purpose
 
-This page defines how **Ops** operates once **Oficina** exists as a governance layer.
+Ops is the execution discipline inside the governed Office loop.
 
-Ops remains the execution manual.
-It still governs block execution, evidence, closure, and re-entry discipline.
+The selection boundary is simple:
 
-What changes is the source of selection.
+**Office compiles. Execution acts. Evidence returns. Governance reviews reentry.**
 
-Ops no longer begins by default from the full raw universe.
-Ops begins from an **Office-compiled subset**.
+Ops should not reopen the full state estate by default.
 
-## High-level rule
+## What Ops receives
 
-**Oficina selects and prepares.  
-Ops executes and evidences.**
+Depending on the work, execution may receive:
 
-The structured return handoff is documented as [Ops Closure v1](contracts/ops-closure-v1).
+- a typed work item;
+- a Staff packet;
+- a Principal decision/default;
+- an execution packet;
+- source/evidence references;
+- repository/workspace identity;
+- expected evidence and explicit constraints.
 
-## What Ops now expects from Office
+The exact runtime contract is owned by Office v2 and `operator_contract_v2`.
 
-Before Ops begins, Office should provide a compile.
+## What Ops owns
 
-At minimum, Ops expects the following inputs from Oficina:
+Ops owns the quality of the bounded move:
 
-### 1. Principal-approved or default-accepted compile
-Ops should be working from the current accepted compile, not from stale assumptions.
+- execute only within allowed powers;
+- make the first action concrete;
+- keep the scope bounded;
+- produce evidence appropriate to the claim;
+- stop rather than silently expand;
+- leave a restartable next pointer if unfinished;
+- report what actually happened.
 
-### 2. Nominated work objects or candidate set
-Ops should receive:
+## What Ops does not own
 
-- one or more candidate fronts
-- support context if needed
-- current carry posture
-- any important horizon constraint
+Ops does not silently decide:
 
-### 3. Relevant support artifacts
-Examples:
+- canonical carry state;
+- priority;
+- front lifecycle;
+- Principal judgment;
+- identity reconciliation;
+- repository-estate semantics;
+- whether a view should pretend a failed run succeeded.
 
-- unlocker brief
-- decision brief
-- context brief
-- health check packet
-- next-unlock memo
-- prior closure note
+An executor can recommend state movement. Governance owns accepting or rejecting it.
 
-### 4. Escalation posture
-Ops should know whether:
+## Execution flow
 
-- the matter is fully executable
-- the matter is waiting on Principal decision
-- the matter is conditionally executable
-- the matter is fallback only
+### 1. Start from compiled work
 
-### 5. Expected evidence
-Ops should know what valid progress looks like for the block.
+Normal entry is a current Office generation or another explicit governed view.
 
----
+Do not rebuild selection from the raw universe merely because more information is available.
 
-## Updated execution flow
+### 2. Resolve one bounded move
 
-## 1. Office compiles
-Office produces:
+Use the current packet, decision, or human pull to determine:
 
-- principal brief
-- today compile
-- support queue
-- escalations
-- block candidates
+- objective;
+- allowed action;
+- evidence expected;
+- stop rule;
+- dependencies;
+- unresolved uncertainty.
 
-## 2. Principal decides as needed
-The Principal may:
+### 3. Execute
 
-- approve
-- correct
-- accept default compilation
+Choose the smallest move that can change the relevant Endpoint or produce the evidence required for the next decision.
 
-## 3. Ops executes
-Ops runs BOOT and day-clock logic on the nominated subset.
+Reusable operator motifs live in the [Motif Registries](motif-registries).
 
-This means:
+### 4. Return evidence
 
-- BOOT no longer has to start from the full project universe by default
-- day clock can evaluate among candidates rather than among everything
-- execution can begin with lower friction
+Evidence should be sufficient to distinguish:
 
-## 4. Ops produces evidence and closure
-Ops still must produce:
+- done;
+- partial;
+- blocked;
+- no meaningful change.
 
-- evidence
-- block closure
-- next touch exacto
-- decision to continue / pause / park / escalate
+### 5. Reenter through review
 
-For a structured handoff, normalize these fields into `artifact:ops.closure@1` as documented in [Ops Closure v1](contracts/ops-closure-v1).
+Current Office v2 uses packet-bound receipts and reentry proposals.
 
-## 5. Office reingests
-Office reads the outputs of Ops and updates:
+A human block may still use a compact closure note, but the note is input to governance—not an alternate state database.
 
-- carry state
-- support queue
-- escalation queue
-- future block candidates
+## VACChain / Endpoint use during execution
 
-An Ops carry value is a **recommendation**, not a direct mutation of canonical Carry State. Office remains the authority that accepts, changes, or rejects that recommendation.
+A VACChain is helpful when execution has become locally busy but globally unclear.
 
----
+Ask:
 
-## What stays the same from classic Ops
+1. Which value-producing chain are we inside?
+2. Which Endpoint are we trying to change?
+3. What evidence would make the changed claim credible?
+4. Is the current move actually on that path?
 
-Under Office governance, Ops still owns:
+This is a reasoning aid, not a requirement that every execution packet contain a full VAC model.
 
-- block discipline
-- mode discipline
-- evidence-first progress
-- stop rules
-- closure
-- re-entry clarity
-- execution quality
+## Direct/fallback work
 
-Office does not replace those.
+A human may sometimes act before a fresh Office generation exists—for example, an urgent repair or a clearly bounded external obligation.
 
-## What changes from classic Ops
+That is acceptable when the work can be bounded safely.
 
-### Before
-Ops often had to:
-- see the whole universe
-- choose from raw fronts
-- reconstruct selection logic manually
+Afterward, return evidence to the governed system rather than creating a shadow local state.
 
-### Now
-Ops should:
-- start from Office-nominated work
-- inherit support artifacts
-- inherit current posture and urgency
-- return structured outputs to Office
+## Human closure
 
-This reduces decision load at execution time.
+For manual work, the durable minimum is:
 
----
+```text
+front: <front_id or clear referent>
+result: <done|partial|blocked|no-change>
+evidence: <proof>
+closure: <what changed>
+next: <restart instruction or none>
+escalate: <yes/no + reason>
+```
 
-## BOOT under Office
-
-BOOT still exists.
-
-But BOOT should now operate in one of two modes:
-
-### 1. Normal mode
-Input comes from Office compile.
-
-BOOT checks:
-- current candidate set
-- support artifacts
-- today constraints
-- expected evidence
-- feasible first block
-
-### 2. Fallback mode
-If no valid Office compile exists, Ops may still run from the raw system.
-
-Fallback mode should be explicit and temporary.
-
-Fallback mode is allowed when:
-
-- Office compile is missing
-- compile is stale
-- system is in recovery state
-- urgent interruption requires immediate local action
-
-Fallback mode should result in an Office update afterward.
-
----
-
-## Outputs Ops must return to Office
-
-After execution, Ops should return structured updates. [Ops Closure v1](contracts/ops-closure-v1) is the canonical documented shape for this return packet.
-
-At minimum:
-
-### 1. Evidence
-What was actually produced.
-
-### 2. Closure
-What was done, what remains pending, and what the next touch is.
-
-### 3. Carry recommendation
-Suggested update to carry state:
-
-- Active
-- Watch
-- Support-needed
-- Escalate
-- Parked
-- no-change
-
-### 4. Horizon recommendation
-If work changed the time horizon, that should be suggested.
-
-### 5. Follow-up spawn recommendation
-Ops should indicate if the block implies that Office should spawn:
-
-- unlocker brief
-- health check
-- decision packet
-- nudge
-- review item
-- new block candidate
-
-### 6. Escalation signal
-Ops should say clearly if the matter must go back up to the Principal.
-
----
-
-## Allowed relationship between Office and Ops
-
-A useful working formula is:
-
-- Office compiles work
-- Ops executes compiled work
-- Ops returns structured updates
-- Office maintains continuity and recompiles
-
-This creates a loop rather than a one-shot planner.
-
-## Minimal v0 rule set
-
-For v0, Ops under Office only requires three practical changes:
-
-### A. Read Office Compile first
-Before selecting work, read the current compile.
-
-### B. Execute from candidate set
-Prefer Office-nominated fronts over raw-front selection.
-
-### C. Return structured outputs
-Always return evidence, closure, and carry/update recommendations. Prefer the `artifact:ops.closure@1` shape when practical.
-
-That is enough to align Ops with Oficina without rewriting the whole manual.
-
-## Suggested wording for Start Here
-
-A minimal conceptual update to `Start Here` would be:
-
-- add a precondition: **Read Office Compile**
-- replace “pick a work object” with:
-  **select from Office-nominated work objects, unless operating in fallback mode**
-- add a final step:
-  **return an Ops Closure packet to Office**
+The historical [Ops Closure v1](contracts/ops-closure-v1) remains a useful human compatibility form, but current machine reentry semantics are owned by Office v2.
 
 ## Final principle
 
-Ops should not ignore Oficina.
-Oficina should not micromanage Ops.
-
-The contract is simple:
-
-**Oficina governs what enters execution and what gets prepared.  
-Ops governs how execution happens and what evidence comes back.**
+**Execution may be fast and flexible. Authority must remain boring.**
