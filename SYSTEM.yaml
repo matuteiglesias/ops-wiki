@@ -12,28 +12,40 @@ authority:
   status: declared
   owns:
   - documentation of Ops execution doctrine
-  - block, mode, evidence, stop-rule, closure, and re-entry conventions
-  - documentation of the Office-to-Ops execution handoff and fallback execution posture
-  - documentation of artifact:ops.closure@1
+  - documentation of Office-to-Ops authority and handoff boundaries
+  - durable conceptual vocabulary such as VACChain and Endpoint
+  - documentation motif registries for reusable work/operator names
+  - human block, evidence, stop-rule, closure, and re-entry conventions
   does_not_own:
   - canonical operational Front Registry or Carry State
+  - operator runtime authorization or operator_contract_v2
   - Office compile runtime or generated Office state
   - GitHub repository registry, lifecycle, topology, or readiness authority
-  - weekly governance state or weekly human-board state
+  - weekly cadence, horizon, or human-board state
+  - Event & Institutional Frontier state
   - runtime execution records merely because their format is documented here
 interfaces:
-  consumes: []
-  produces: []
-upstream: []
-downstream: []
+  consumes:
+  - Control Tower v2 architecture contracts
+  - office-auto-lab Office v2 runtime contracts
+  produces:
+  - public execution doctrine
+  - conceptual vocabulary
+  - documentation motif registries
+upstream:
+- system.office.control-tower
+- system.office.runtime
+downstream:
+- weekly governance documentation
+- human and agent readers
 canonical_commands: []
 generated_paths: []
 verification:
   status: documentation-only
-  last_verified: '2026-09-01'
+  last_verified: '2026-09-22'
   command: null
   unknowns:
-  - some older pages may retain historical project/front terminology and should be migrated only when encountered, not by broad rewrite
+  - documentation motif registries are intentionally non-authoritative for runtime powers
 maintenance:
   cadence: quarterly
   next_review: '2026-11-01'
