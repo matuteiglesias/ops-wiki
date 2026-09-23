@@ -1,41 +1,33 @@
-# Website
+# Ops Manual
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+Public execution/governance doctrine for Matías's Office ecosystem.
 
-## Installation
+The current architecture is:
 
-```bash
-yarn
+```text
+Control Tower / governed Sheets
+  → Office coherent generation
+  → typed work + Staff + Principal surfaces
+  → bounded execution
+  → evidence / receipts
+  → reviewed reentry
 ```
 
-## Local Development
+This repository documents that architecture and durable concepts such as `VACChain`, `Endpoint`, evidence, stop rules, and reusable operator/work motifs.
+
+It does **not** own live Control Tower state, Office runtime semantics, weekly cadence policy, or Event & Institutional Frontier state.
+
+## Local development
 
 ```bash
-yarn start
+npm ci
+npm run start
 ```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
 ## Build
 
 ```bash
-yarn build
+npm run build
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-## Deployment
-
-Using SSH:
-
-```bash
-USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+The deployed site is configured for `https://ops.matuteiglesias.link/`.

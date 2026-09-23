@@ -4,209 +4,138 @@ title: Checks and Runbooks
 sidebar_position: 50
 ---
 
-## Module header
-Purpose: define verification and memory: check taxonomy, runbook standards, evidence manifests, and drift failure modes.
+# Checks and Runbooks
 
-Exports:
-- Check types (smoke, run live bounded, contract, health, content validation)
-- RunbookHuman and RunbookMachine minimum spec
-- Evidence and manifests conventions
+## Purpose
 
-Imports:
-- Evidence links from [Data Model](data-model#evidencelink)
-- Mode done definitions from [Execution Model](execution-model#modes-v1)
-- Maintenance behavior from [Day Clock and Selection](day-clock-selection)
+Checks enforce claims. Runbooks preserve execution memory.
 
-## Jump
-- [Check types](#check-types)
-- [Check outcomes and frontier mapping](#check-outcomes-and-frontier-mapping)
-- [Runbooks](#runbooks)
-- [Evidence and manifests](#evidence-and-manifests)
-- [Runbook drift](#runbook-drift)
-- [Maintenance pattern](#maintenance-pattern)
+Neither should become a parallel state system.
 
----
+## Check families
 
-## Check types
+The following families remain broadly useful:
 
-Checks are truth enforcement. They exist to evaluate endpoints, produce evidence, and update frontier. A check is successful only if it emits the evidence required by the endpoint.
+### Smoke
 
-### Check taxonomy (v0) {#check-taxonomy}
+Fast bounded verification, usually fixture/offline where possible.
 
-1. #### Smoke
-   - Intent: fast, offline, fixture-driven verification.
-   - Typical use: PIPELINE and TOOLSMITH.
-   - Inputs: fixtures or local test inputs only.
-   - Output: artifacts plus logs plus exit code.
+### Run live bounded
 
-2. #### Run live bounded
-   - Intent: validate behavior on live inputs with strict bounds.
-   - Typical use: SERVICE and PIPELINE.
-   - Bounds: timebox, scope limit, rate limits, safe mode.
-   - Output: logs, artifacts (if any), health signals.
+Validate behavior against live inputs under explicit scope and safety bounds.
 
-3. **Contract test**
-   - Intent: lock integration boundaries and prevent recurrence.
-   - Typical use: CONTRACT.
-   - Requires: minimal repro encoded and repeatable.
-   - Output: repro script or test plus regression guard.
+### Contract test
 
-4. **Health check**
-   - Intent: determine whether a service is alive, observable, and restart-safe.
-   - Typical use: SERVICE.
-   - Output: health status plus logs/metrics pointer.
+Encode an integration boundary or a minimal reproduction so recurrence is detectable.
 
-5. #### Content validation
-   - Intent: prevent silent corruption by enforcing invariants on outputs.
-   - Typical use: PIPELINE, SERVICE, GOVERNANCE, CONTACT.
-   - Examples: schema validation, non-empty checks, row counts, uniqueness constraints, hash consistency, required narrative fields.
+### Health check
 
-### Required properties (v0)
-Every check definition should specify:
-- scope: fixture vs live
-- timebox: default bounded runtime
-- acceptance criteria: what counts as PASS
-- evidence emitted: logs, manifests, artifacts
-- failure output: where to find diagnostics
+Observe whether a running system is alive, inspectable, and behaving under its contract.
 
-For narrative/stakeholder artifacts validated by content checks, include:
-- required fields (`objective`, `decision_or_status`, `next_pointer`, `trace_links`)
-- traceability rule (must link source and promoted artifacts where applicable)
-- structure rule (template sections present; unknowns explicit)
+### Content validation
 
----
+Check artifact invariants such as schema, non-empty output, row counts, uniqueness, required narrative fields, or digest consistency.
 
-## Check outcomes and frontier mapping
+These are check motifs. Concrete projects may define additional checks.
 
-Checks produce outcomes that feed frontier states. This mapping must be consistent or the system collapses into feelings.
+## Endpoint relationship
 
-### Check outcome fields (v0)
-- `check_id`
-- `endpoint_id`
-- `status` (PASS/WARN/FAIL)
-- `timestamp`
-- `evidence_links[]`
-- `summary` (one line)
-- `diagnostics` (log pointers)
+An Endpoint makes a claim.
 
-### Mapping rules (v0)
-- **PASS**: exit code OK plus required evidence exists plus content validation gates pass (when applicable).
-- **WARN**: check passes but evidence is weak, stale, partial, or missing auxiliary memory (runbook/prereq).
-- **FAIL**: check fails, times out, or critical evidence missing, or runbook drift detected.
+A check provides evidence for or against that claim.
 
-Notes:
-- WARN is allowed as a temporary state, but must be cheap to clear and should be targeted in maintenance blocks.
+Do not require all domains to map results into one PASS/WARN/FAIL frontier.
 
----
+A check can expose the domain-native result as long as the acceptance rule is explicit and inspectable.
+
+## Check definition
+
+A useful check definition includes:
+
+- scope;
+- input/source;
+- acceptance criteria;
+- evidence emitted;
+- failure diagnostics;
+- safety bounds where relevant.
 
 ## Runbooks
 
-Runbooks are memory. They exist to reduce decision load, enable re-entry, and make checks executable without re-deriving context.
+Runbooks reduce re-derivation cost.
 
-### Runbook classes
-- **RunbookHuman**: how a human executes safely and makes decisions.
-- **RunbookMachine**: how a machine executes deterministically (commands, paths, expected outputs).
+### Human runbook
 
-A project may have both. Missing runbooks is typically WARN for active projects.
+Useful contents:
 
+- purpose;
+- what success means;
+- prerequisites;
+- safe procedure;
+- common failures;
+- validation;
+- restart/next pointers.
 
-### RunbookHuman minimum spec (v0) {#runbookhuman}
-- Purpose (one paragraph)
-- What “done” looks like (tie to endpoints)
-- Preconditions and prerequisites
-- How to run (checklist steps)
-- Common failure modes and quick fixes
-- Next pointers (what to do after PASS, WARN, FAIL)
-- Ownership and cadence (who updates, when reviewed)
+### Machine runbook
 
+Useful contents:
 
-### RunbookMachine minimum spec (v0) {#runbookmachine}
-- Entry points: exact commands (make targets, scripts, CLI)
-- Inputs: paths, fixtures, env vars
-- Outputs: artifact locations and patterns
-- Validation commands: how to check success (smoke/live/content gates)
-- Logs: where they go and how to inspect
-- Exit codes: expected and failure meanings
-- Safety bounds: timeboxes, dry-run options, rate limits
+- exact entrypoint/command;
+- required inputs and environment;
+- output locations;
+- validation command;
+- logs;
+- failure behavior;
+- safety/dry-run options.
 
-### Runbook storage rule (v0)
-- Human runbook lives in docs (wiki) and should link to endpoints and checks.
-- Machine runbook lives close to code (repo) but may be mirrored in docs as a pointer list.
-- Do not duplicate large procedures. Prefer pointers from docs to repo commands.
+Do not duplicate large procedures across manual and repository. The manual should point to the executable authority when one exists.
 
----
+## Evidence manifests
 
-## Evidence and manifests
+For technical runs, a manifest often makes evidence cheaper to inspect.
 
-Evidence is what makes progress real. Checks must emit evidence and link it back to the frontier via EvidenceLink objects.
+Useful fields include:
 
-### EvidenceLink pointer
-Use [EvidenceLink](data-model#evidencelink) for the stable reference fields.
+- run identity/time;
+- input identifiers/digests;
+- output artifacts;
+- counts/sizes;
+- validation results;
+- code/tool revision.
 
-### Evidence conventions (v0)
-- Prefer a **manifest file** for each run or each endpoint evaluation.
-- Prefer deterministic output directories with timestamps or run IDs.
-- Prefer stable file naming for downstream automation.
+The exact schema belongs to the producer.
 
-### Manifest minimum spec (v0)
-A manifest should contain:
-- run id and timestamp
-- input identifiers (paths, hashes, dataset id)
-- output artifact list with sizes
-- row counts or counts for key tables
-- validation results summary (PASS/WARN/FAIL per gate)
-- version markers when available (git hash, tool version)
+## Drift
 
-### Evidence quality rule
-- A check is not “green” because it ran. It is green because it emitted meaningful evidence.
-- If you cannot link evidence, downgrade to WARN even if exit code is zero.
-- Narrative/stakeholder evidence counts only if structured and traceable; loose free text is not enough.
-- In technical contexts (endpoint checks), narrative evidence can explain decisions but cannot replace required technical evidence.
+A runbook is stale when it describes a system that no longer exists.
 
----
+Severity depends on consequence:
 
-## Runbook drift
+- harmless wording drift → documentation cleanup;
+- misleading command/path → operational defect;
+- false success claim → serious contract defect.
 
-Runbook drift is a failure mode: the runbook says one thing, reality differs, and execution becomes unsafe or misleading.
+The fix is to align the runbook and the executable check, not to add another explanatory layer.
 
-### Drift indicators
-- Commands in the runbook no longer work.
-- Paths, env vars, or expected outputs changed without updating runbook.
-- Runbook claims a PASS condition that checks do not enforce.
-- A new “gotcha” exists but is not documented.
+## Maintenance
 
-### Drift classification (v0)
-- Drift that causes confusion but not incorrect truth: **WARN**
-- Drift that misleads execution or causes false PASS / missed FAIL: **FAIL**
+Bounded maintenance can include:
 
-### Drift resolution operator (recommended)
-- Update the runbook to match reality.
-- Add or update a check or content validation gate so truth is enforced.
-- Add a regression guard if drift came from repeated breakage.
+- updating a stale runbook;
+- adding a missing validation gate;
+- repairing a broken evidence pointer;
+- converting a vague recurring failure into a reproducible check;
+- documenting one repeatedly rediscovered prerequisite.
 
----
+It should not become a default excuse for broad refactoring.
 
-## Maintenance pattern
+## Relationship to current Office
 
-Maintenance blocks exist to reduce WARNs and prevent slow entropy.
+Office v2 runtime health is derived from run records and current runtime evidence.
 
-### What belongs in maintenance blocks
-- Create or update runbook stubs (Human or Machine)
-- Add missing prereq scaffolds (files, dirs, configs)
-- Add content validation gates for pipelines
-- Fix broken links or doc build hazards in the wiki
-- Convert vague failures into DebugPackets and schedule bounded CONTRACT work
-
-### What does not belong in maintenance blocks
-- Unbounded debugging
-- Large refactors
-- Live risky changes without run live bounded checks
-
----
-
-## Used by
-- [Frontier semantics](data-model#frontier-semantics)
-- [Mode done definitions](execution-model#evidence-patterns)
+This manual documents verification practices; it does not own `runtime_health_v2`.
 
 ## See also
-- [One Pager Spec](spec-one-pager)
+
+- [Authority, State & Projection Model](data-model)
+- [Execution Model](execution-model)
+- [Motif Registries](motif-registries)

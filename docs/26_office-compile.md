@@ -1,281 +1,152 @@
 ---
-title: Office Compile v0
+title: Office Compile
 sidebar_position: 33
 slug: /office-compile
 ---
 
-# Office Compile v0
+# Office Compile
 
 ## Purpose
 
-The Office Compile is the process by which **Oficina** turns the current system state into usable operational material.
+The current Office compile is a **coherent generation**, not a collection of independently refreshed queues.
 
-It exists to answer:
+One generation observes governed state once, derives the current work/preparation surfaces, validates them together, and only then advances the published current pointer.
 
-- what should reach the Principal today
-- what can be prepared by staff
-- what should be executed now
-- what should be escalated
-- what can safely wait
+## Generation flow
 
-The compile should reduce uncertainty and lower the cost of starting work.
+```text
+snapshot
+  → identity
+  → typed work
+  → Staff
+  → Principal
+  → execution plan
+  → validate
+  → publish
+```
 
-## Inputs
+Downstream stages use the same snapshot digest.
 
-Office Compile uses, at minimum:
+They must not independently reread mutable Control Tower state during the generation.
 
-- front registry
-- carry state
-- horizon
-- needs
-- principal flag
-- any relevant support artifacts
-- recent evidence or last touch
-- current context surfaces when needed
+## Input boundary
 
-Optional signals:
+The Control Tower v2 snapshot currently covers the governed v2 tables required by Office, including front identity, carry state, capabilities, operator contracts, aliases, support artifacts, repository/workspace bindings, and runtime-health projection.
 
-- momentum / touched recently
-- blocked near completion
-- relevant this week
-- runtime health
-- deadline pressure
-- external commitments
+The intake layer validates structure and referential identity before routing.
 
-## Core outputs
+It does not:
 
-Office Compile produces five core outputs:
+- mutate Sheets;
+- choose Principal answers;
+- execute repositories;
+- silently resolve identity collisions.
 
-### 1. Principal Brief
-What must reach the Principal.
+## Typed work
 
-### 2. Today Compile
-What should be considered for today’s actual work.
+Office uses five work facets:
 
-### 3. Support Queue
-What staff should prepare below the Principal.
+| Kind | Meaning |
+|---|---|
+| `DECIDE` | Principal judgment is structurally required. |
+| `UNBLOCK` | Safe progress lacks context, identity, evidence, or preparation. |
+| `VERIFY` | A bounded diagnostic/evidence pass is required. |
+| `EXECUTE` | Work is sufficiently expressed and unblocked for bounded action. |
+| `MAINTAIN` | Bounded human upkeep is explicitly expressed. |
 
-### 4. Escalation Queue
-What requires judgment or explicit direction.
+These replace older prose-driven queue inference.
 
-### 5. Block Candidates
-What Ops may execute from the compiled subset.
+A front may emit more than one work item.
 
----
+## Staff preparation
 
-## 1. Principal Brief
+Staff consumes typed work and the captured snapshot.
 
-### Purpose
-The Principal Brief is the compact list of items that require direct human judgment, decision, approval, or attention.
+It may cheaply triage all items while deep-preparing only a bounded set.
 
-### Selection rule
-Include items where:
+A Staff packet can contain:
 
-- `principal = Required`
-- horizon is `Today` or `This week`
-- or the item has become a real escalation
+- current state;
+- identity summary;
+- evidence;
+- uncertainties;
+- blockers;
+- recommended move;
+- Principal question when needed;
+- action maturity where applicable.
+
+The recommendation is advisory.
+
+## Principal surface
+
+The Principal Compiler compresses prepared work into a small structured brief.
+
+Canonical sections include:
+
+- `needs_you`;
+- `ready_pulls`;
+- `exceptions`;
+- `moved_without_you`;
+- `delta`.
+
+Presentation budgets limit what is shown. They do not rewrite Control Tower priority.
+
+## Execution compilation
+
+Ready pulls may be compiled into execution packets constrained by `operator_contract_v2`.
+
+A packet is bounded work plus allowed powers, prohibitions, evidence expectations, and relevant identity.
+
+A packet does not acquire governance-mutation authority merely because the work is ready.
+
+## Reentry
+
+Execution produces evidence and receipts.
+
+Reentry validates packet-bound results and proposes reviewed state movement such as:
+
+- `DONE`;
+- `FOLLOW_UP`;
+- `WAITING`.
+
+The executor does not directly rewrite carry or priority semantics.
+
+## Coherent publication
+
+Generation artifacts are run-scoped.
+
+A current pointer should reference only a fully successful published generation. Failed generations remain inspectable through run records but cannot replace the last-known-good publication.
+
+## Views
+
+Consumer-specific views may be compiled from the coherent generation or other governed state.
 
 Examples:
 
-- time-sensitive human outreach
-- strategic decisions
-- supervision with external deadlines
-- legal or stakeholder-sensitive matters
-- unresolved choices blocking execution
+- Principal view;
+- weekly view;
+- maintenance view;
+- relationship/institutional Frontier view.
 
-### Output shape
-Each item should contain:
+Views may choose different grouping vocabularies. They do not need one universal status enum.
 
-- front / matter name
-- why now
-- what is at stake
-- what decision or action is needed
-- recommended default if one exists
-- relevant support artifact links
+## What happened to the old outputs?
 
-### Constraints
-Keep it small.
-The Principal Brief should not become a second project catalog.
+Historical names such as:
 
----
+- `today_compile`;
+- `support_queue`;
+- `escalation_queue`;
+- `block_candidates`;
+- `principal_brief_today`;
+- `principal_brief_week`;
 
-## 2. Today Compile
+belong to the Office v1 generation.
 
-### Purpose
-The Today Compile is the office-compiled proposal for what the day should contain.
+They may appear in historical notes, but new consumers should use current Office v2 artifacts or explicit published-view contracts rather than requiring compatibility output forever.
 
-It is narrower than “this week” and should be operationally usable.
+## Source of truth
 
-### Selection rule
-Prefer:
+The implementation authority for current compile behavior is `office-auto-lab`, especially its Control Tower snapshot, work-item compiler, Staff v2, Principal v2, execution compiler, reentry, coherent-generation, and run-record contracts.
 
-- `Active`
-- `This week` or `Today`
-- execution-ready items
-- support-needed items only when they unlock significant downstream value
-- already-prepared items over vague ambitions
-
-### Suggested limits
-A reasonable v0 daily compile may include:
-
-- 2 to 3 Principal-facing items
-- 2 to 3 staff-preparable items
-- 1 support-needed technical or unlock item
-- a short overflow / later-today list
-
-### Output shape
-The Today Compile should contain sections such as:
-
-- Today: Principal
-- Today: Staff-preparable
-- Today: Executable block candidates
-- Today: Escalations
-- Not today, but still this week
-
----
-
-## 3. Support Queue
-
-### Purpose
-The Support Queue is where Oficina places work that should be prepared before it reaches execution or the Principal.
-
-This is staff work, not deep project execution.
-
-### Typical contents
-Examples:
-
-- unlocker brief
-- health check
-- decision brief
-- context brief
-- next-unlock packet
-- re-entry memo
-- review packet
-
-### Selection rule
-Prefer items where:
-
-- `carry = Support-needed`
-- `principal = Recommended`
-- `needs` signals a support artifact rather than raw execution
-- the item unlocks a valuable front
-- the item reduces future decision load
-
-### Output shape
-Each queue item should contain:
-
-- front name
-- support artifact type
-- why this support is needed
-- expected payoff
-- whether it can be completed without Principal intervention
-
----
-
-## 4. Escalation Queue
-
-### Purpose
-The Escalation Queue holds matters that cannot be responsibly resolved at the staff layer.
-
-### Include when
-Examples:
-
-- the matter needs non-trivial judgment
-- there is a policy choice or direction choice
-- the matter is sensitive
-- the matter is blocked by a decision
-- the matter has changed materially since last review
-
-### Output shape
-Each escalation item should contain:
-
-- front name
-- escalation reason
-- current state
-- consequences of delay
-- options if available
-- recommendation if available
-
-### Important distinction
-Not every `Required` item is dramatic.
-But every escalation should be explicit.
-
----
-
-## 5. Block Candidates
-
-### Purpose
-Block Candidates are the work objects that Office nominates for Ops execution.
-
-They are not the whole universe.
-They are the currently allowed subset.
-
-### Selection rule
-Prefer items that are:
-
-- Active
-- sufficiently prepared
-- aligned with horizon
-- not dependent on missing artifacts
-- not blocked by unresolved escalation
-
-### Block candidate record
-Each candidate should ideally include:
-
-- front / matter
-- recommended mode
-- expected evidence
-- stop rule
-- relevant support artifact
-- whether it is primary or fallback
-
----
-
-## Compile logic summary
-
-### Office compiles
-Office produces:
-
-- principal brief
-- today compile
-- support queue
-- escalations
-- block candidates
-
-### Principal decides what is needed
-The Principal:
-
-- approves
-- corrects
-- or accepts the compilation
-
-### Ops executes
-Ops runs on the compiled subset, not on the full universe by default.
-
-### Office reingests
-Office then updates carry state, spawns follow-ups, and recompiles if needed.
-
-## v0 practical rule
-
-The compile should be:
-
-- small
-- current
-- defensible
-- easy to enter
-- easy to update
-- visibly useful
-
-If the compile is large, vague, or speculative, it has failed.
-
-## Minimal v0 implementation rule
-
-Even a manual compile counts as valid if it yields:
-
-- a short principal brief
-- a short today compile
-- a support queue
-- a short escalation list
-- 2 to 5 real block candidates
-
-That is enough to begin running Oficina in practice.
+This page explains those boundaries; it does not duplicate their full schemas.

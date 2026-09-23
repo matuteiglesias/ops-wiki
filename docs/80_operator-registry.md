@@ -1,520 +1,78 @@
 ---
 id: operator-registry
-title: Operator Registry
-sidebar_position: 45
+title: Operator Motifs
+sidebar_position: 70
 ---
 
-## Module header
-Purpose: provide the canonical reference list of operators (op_ids) that the system allows. Operators are the executable moves that create evidence and can change frontier state.
+# Operator Motifs
 
-Exports:
-- OperatorRegistry (set of allowed `op_id` values)
-- Operator naming conventions
-- Evidence expectations per operator (at the level of “what must exist”)
-- Forward compatible operators (marked “foreseeable”)
+## Purpose
 
-Imports:
-- Modes and runtime contracts from [Execution Model](execution-model)
-- Check taxonomy and evidence conventions from [Checks and Runbooks](checks-runbooks)
-- Truth objects and frontier semantics from [Data Model](data-model)
-- Scheduling constraints from [Day Clock and Selection](day-clock-selection)
+Keep the most useful repeatable moves visible without making this page a second runtime operator authority.
 
-## When to use this page
-Use this page when you need to:
-- pick an operator quickly for a block
-- define a new operator without inventing vocabulary
-- audit whether a project is missing standard operators (smoke, runbooks, debug packet)
-- generate or validate “prepared queues” for future automation
+Live powers and prohibitions are governed by Control Tower `operator_contract_v2` and the current execution packet.
 
-If you are doing scheduling or choosing what to work on, start at:
-- [Day Clock and Selection](day-clock-selection)
+The full memoized vocabulary lives in [Motif Registries](motif-registries).
 
-If you are defining the meaning of progress, start at:
-- [One Pager Spec](spec-one-pager)
+## Primary motifs
 
-## Jump
-- [Rules](#rules)
-- [Naming and IDs](#naming-and-ids)
-- [Required fields recap](#required-fields-recap)
-- [Operator list](#operator-list)
-- [Used by](#used-by)
+### Verification
 
----
+- **RunSmoke** — prove a bounded path with fixtures/offline inputs.
+- **RunLiveBounded** — validate a live path under explicit safety bounds.
+- **ContentValidationGate** — enforce structural/content invariants.
+- **FreshnessCheck** — determine whether evidence is current enough.
 
-## Rules
+### Debugging / boundary stabilization
 
-1) **Operators produce evidence or they do not count.**  
-A run without evidence and a next pointer is a non-event.
+- **MinimalReproExtraction** — make unclear behavior reproducible.
+- **DebugPacketCreate** — package an unresolved failure so work can stop cleanly.
+- **RegressionGuardrailAdd** — encode a test/assertion preventing recurrence.
+- **ADRLite** — record a decision cheaply enough to prevent relitigation.
 
-2) **One block, one mode, mode constrains operators.**  
-If the operator is not legal in the block mode, it is not allowed.
+### Capture / preparation
 
-3) **Every operator has checks.**  
-Even minimal: a smoke run, a validation gate, or a dry-run contract check.
+- **CaptureIntake** — preserve raw input.
+- **SessionCondense** — compress it into decisions and unknowns.
+- **NextPointerFromCapture** — derive one restartable move.
+- **EvidenceManifestWrite** — bind outputs into inspectable evidence.
 
-4) **Default timeboxes are mandatory.**  
-If you cannot bound it, you cannot schedule it.
+### Relationship / opportunity
 
-5) **If you drift, you pack.**  
-Use DebugPacket operators to stop runaway debugging.
+- **CRMSprint** — move a bounded batch of touches.
+- **TargetBatchTriage** — classify a raw target list.
+- **StakeholderMeetingPrep** — prepare objective, asks, context, and risks.
+- **BriefBeforeSend** — validate intent, facts, risk, and CTA before a consequential send.
+- **FollowUpStrategy** — turn an interaction into explicit follow-up state.
 
-References:
-- [Operator contract](execution-model#operator)
-- [Stop rules](execution-model#stop-rules)
-- [Evidence standard](spec-one-pager#evidence-standard)
+## How to use a motif
 
----
+A motif answers “what kind of move is this?” It does not answer “am I allowed to do it?”
 
-## Naming and IDs
+Before execution:
 
-Conventions:
-- `op_id` is stable PascalCase, verb-first: `RunSmoke`, `RepoInitUpgrade`, `RunbookMachineSpec`.
-- Operator names should be action verbs and not project-specific.
-- Prefer generic operators that can be reused across projects; project specifics belong in inputs and runbooks.
+1. identify the current work item / human objective;
+2. inspect the current operator contract or human authority;
+3. choose a fitting motif;
+4. make evidence and stop rule explicit;
+5. execute within the actual allowed powers.
 
----
+## Adding motifs
 
-## Required fields recap
+Add a motif to the machine-readable registry when:
 
-This page lists `op_id` values. The full operator schema lives in:
-- [Operator](execution-model#operator)
+- the pattern recurs across fronts;
+- the name saves explanation;
+- expected evidence is recognizable;
+- the pattern is not already ordinary language.
 
-Minimum fields to consider an operator “defined”:
-- `op_id`, `name`, `mode_ids[]`, `steps[]`, `acceptance_checks[]`, `timebox_minutes`, `failure_paths[]`, `evidence_pattern`
+Avoid project-specific operators in the global motif registry.
 
+## Full registry
 
+See:
 
+- [Motif Registries](motif-registries)
+- `docs/registries/operator-motifs.yaml`
 
-## Used by
-- [Mode constraints](execution-model#modes-v1)
-- [Prepared queues](day-clock-selection#selection-policy)
-- [Checks taxonomy](checks-runbooks#check-types)
-- [Frontier semantics](data-model#frontier)
-
-## See also
-<!-- - [Templates](templates) -->
-- [One Pager Spec](spec-one-pager)
-
-
-
----
-
-## Allowed values (create new ones only if really necessary) 
-
-### Mode IDs
-
-* `PIPELINE`
-* `TOOLSMITH`
-* `SERVICE`
-* `CONTRACT`
-* `GOVERNANCE`
-* `CONTACT`
-
-### Check types used by operators
-
-* `smoke`
-* `run_live_bounded`
-* `contract_test`
-* `health_check`
-* `content_validation`
-
-### Common evidence outputs
-
-* `log`
-* `manifest`
-* `artifacts`
-* `commit_hash`
-* `frontier_update`
-* `runbook_human`
-* `runbook_machine`
-* `debug_packet`
-* `target_list`
-* `classified_batch`
-* `response_draft`
-* `sent_log`
-* `meeting_brief`
-* `followup_schedule`
-
----
-
-## Operator list {#operator-list}
-
-## A) Core execution operators
-
-### `RunSmoke`
-
-* **Modes:** PIPELINE, TOOLSMITH
-* **Purpose:** Prove an endpoint with offline or fixture execution.
-* **Acceptance checks:** smoke + content_validation
-* **Evidence:** `build.log` or `smoke.log`, `manifest.json`, expected artifacts
-* **Timebox:** 30–60
-* **Failure paths:** create DebugPacket if repeated fail; otherwise fix cheap prereq and rerun.
-
-### `RunLiveBounded`
-
-* **Modes:** SERVICE, PIPELINE
-* **Purpose:** Prove a live endpoint safely (bounded).
-* **Acceptance checks:** run_live_bounded + health_check (if service)
-* **Evidence:** run log, manifest (counts, timestamps), optional health snapshot
-* **Timebox:** 30–90
-* **Failure paths:** fallback to smoke; DebugPacket if live-only failure.
-
-### `ContentValidationGate`
-
-* **Modes:** PIPELINE, TOOLSMITH, SERVICE, CONTRACT
-* **Purpose:** Enforce schema/content invariants on outputs.
-* **Acceptance checks:** content_validation
-* **Evidence:** validation report + manifest
-* **Timebox:** 20–45
-* **Failure paths:** emit anomaly report; schedule CONTRACT.
-
-### `FreshnessCheck`
-
-* **Modes:** PIPELINE, SERVICE
-* **Purpose:** Verify artifacts are recent enough per freshness policy.
-* **Acceptance checks:** content_validation (freshness rule)
-* **Evidence:** freshness report + evidence links to latest artifacts
-* **Timebox:** 10–25
-* **Failure paths:** schedule pipeline run; downgrade to WARN if expected.
-
----
-
-## B) Scaffolding and repo hygiene operators
-
-### `RepoInitUpgrade`
-
-* **Modes:** TOOLSMITH, SERVICE, PIPELINE
-* **Purpose:** Standardize repo so checks and runs are predictable.
-* **Acceptance checks:** smoke (basic), content_validation (lint or file presence)
-* **Evidence:** commit hash + file diff summary + manifest of repo structure
-* **Timebox:** 60–120
-* **Failure paths:** minimal scaffolding only; defer deeper refactor.
-
-### `PrereqsBootstrap`
-
-* **Modes:** TOOLSMITH, PIPELINE
-* **Purpose:** Create missing required stubs (runbooks, make targets, folders).
-* **Acceptance checks:** content_validation (presence + minimal structure)
-* **Evidence:** created files list + manifest
-* **Timebox:** 30–60
-* **Failure paths:** if too many missing pieces, create GOVERNANCE note and cap.
-
-### `DefineCapabilitiesAndTests`
-
-* **Modes:** TOOLSMITH, PIPELINE
-* **Purpose:** Turn a project into endpoints + checks (VAC aligned).
-* **Acceptance checks:** content_validation (spec completeness), smoke (if possible)
-* **Evidence:** updated project spec + new endpoint definitions + manifest
-* **Timebox:** 60–120
-* **Failure paths:** if unclear value, switch to GOVERNANCE and define VAC first.
-
-### `ADRLite`
-
-* **Modes:** TOOLSMITH, CONTRACT, GOVERNANCE, SERVICE
-* **Purpose:** Record a decision that prevents re-litigating.
-* **Acceptance checks:** content_validation (ADR present, linked)
-* **Evidence:** ADR markdown + link from runbook/spec
-* **Timebox:** 20–45
-* **Failure paths:** if decision not ready, record options and a deadline.
-
----
-
-## C) Debug and boundary stabilization operators
-
-### `MinimalReproExtraction`
-
-* **Modes:** CONTRACT
-* **Purpose:** Convert “weird behavior” into reproducible steps.
-* **Acceptance checks:** contract_test (or smoke that reproduces)
-* **Evidence:** repro script/commands + logs + input hashes
-* **Timebox:** 45–90
-* **Failure paths:** if cannot reproduce, capture environment snapshot and stop.
-
-### `DebugPacketCreate`
-
-* **Modes:** CONTRACT, SERVICE
-* **Purpose:** Stop drift and crystallize the failure.
-* **Acceptance checks:** content_validation (packet complete)
-* **Evidence:** debug_packet record + links to logs
-* **Timebox:** 15–25
-* **Failure paths:** if unclear, record unknowns and next experiment only.
-
-### `ResolveDebugPacket`
-
-* **Modes:** CONTRACT, SERVICE
-* **Purpose:** Close a known packet with a fix and a guardrail.
-* **Acceptance checks:** smoke or run_live_bounded + content_validation
-* **Evidence:** commit hash + passing check output + updated packet status
-* **Timebox:** 60–120
-* **Failure paths:** if fix expands scope, split packet and stop.
-
-### `RegressionGuardrailAdd`
-
-* **Modes:** CONTRACT, TOOLSMITH, PIPELINE
-* **Purpose:** Prevent reintroducing the same bug.
-* **Acceptance checks:** smoke (new test passes), content_validation
-* **Evidence:** test/gate added + manifest
-* **Timebox:** 45–90
-* **Failure paths:** minimal guardrail first (assertion), improve later.
-
----
-
-## D) Runbook and knowledge operators
-
-### `RunbookHumanDraft`
-
-* **Modes:** GOVERNANCE, CONTACT
-* **Purpose:** Create the human “how this runs” memory.
-* **Acceptance checks:** content_validation (sections present)
-* **Evidence:** runbook_human + links to endpoints
-* **Timebox:** 30–60
-* **Failure paths:** if too hard, write “Minimum viable runbook” only.
-
-### `RunbookMachineSpec`
-
-* **Modes:** TOOLSMITH, SERVICE, PIPELINE
-* **Purpose:** Make execution reproducible via commands, env, outputs.
-* **Acceptance checks:** smoke (or at least command placeholders), content_validation
-* **Evidence:** runbook_machine + example commands + expected outputs
-* **Timebox:** 45–90
-* **Failure paths:** if cannot run yet, clearly mark TODO and add prereqs list.
-
-### `EvidenceManifestWrite`
-
-* **Modes:** PIPELINE, SERVICE, TOOLSMITH
-* **Purpose:** Produce structured evidence for an existing artifact set.
-* **Acceptance checks:** content_validation (JSON loads, counts match)
-* **Evidence:** manifest + evidence links
-* **Timebox:** 20–45
-* **Failure paths:** if artifacts missing, downgrade endpoint and schedule run.
-
----
-
-## E) Governance operators
-
-### Intake / capture family (entry from raw human context)
-
-Use this family when session input is raw speech, mixed fronts, meeting fragments, or “live context” that is not yet project-clean.  
-These operators are first-class entry moves and should usually run before `LockInSession`.
-
-### `CaptureIntake`
-
-* **Modes:** GOVERNANCE, CONTACT
-* **Purpose:** Capture raw human input into a durable intake note without forcing premature structure.
-* **Inputs:** raw notes/transcript fragments, source context, timestamp, optional participants.
-* **Outputs:** capture note, source links, initial tags (projects/cases/batches as candidates).
-* **Acceptance checks:** content_validation (capture note has source + timestamp + unknowns)
-* **Evidence:** capture note file + links to source artifacts
-* **Timebox:** 10–25
-* **Failure paths:** if source is too noisy, store minimal factual bullets + explicit UNKNOWNs and stop.
-
-### `SessionCondense`
-
-* **Modes:** GOVERNANCE
-* **Purpose:** Convert one or more capture notes into a concise operational note.
-* **Inputs:** capture note(s), existing frontier context, open threads.
-* **Outputs:** condensed session note with decisions, unknowns, and explicit constraints.
-* **Acceptance checks:** content_validation (condensed note has decisions/unknowns/next candidates)
-* **Evidence:** condensed session note + backlinks to capture notes
-* **Timebox:** 15–35
-* **Failure paths:** if ambiguity remains high, split into 2–3 hypotheses and route via DebugPacket or ADRLite.
-
-### `NextPointerFromCapture`
-
-* **Modes:** GOVERNANCE
-* **Purpose:** Derive a candidate next pointer and likely mode/operator from condensed intake material.
-* **Inputs:** condensed session note, current frontier, WIP limits.
-* **Outputs:** candidate next pointer, candidate mode, candidate operator.
-* **Acceptance checks:** content_validation (pointer is one-line executable and timeboxed)
-* **Evidence:** next-pointer record linked to condensed note
-* **Timebox:** 10–20
-* **Failure paths:** if no safe pointer exists, emit explicit “needs triage” pointer and schedule GOVERNANCE block.
-
-### `MeetingPacketDraft`
-
-* **Modes:** GOVERNANCE, CONTACT
-* **Purpose:** Draft a meeting packet that can be promoted into case/batch/project artifacts.
-* **Inputs:** condensed session note, stakeholder context, evidence links.
-* **Outputs:** candidate case/batch/project, open questions, promotion-ready artifact links.
-* **Acceptance checks:** content_validation (packet includes objective, status, asks, links)
-* **Evidence:** meeting packet draft + promoted artifact links (if any)
-* **Timebox:** 20–45
-* **Failure paths:** if packet scope explodes, keep only objective/status/asks and defer decomposition.
-
-### `DailyFrontierCompute`
-
-* **Modes:** GOVERNANCE
-* **Purpose:** Update the truth map for today.
-* **Acceptance checks:** content_validation (frontier record valid)
-* **Evidence:** frontier_update + summary
-* **Timebox:** 15–30
-* **Failure paths:** partial frontier allowed; mark unknown explicitly.
-
-### `WeeklyReview`
-
-* **Modes:** GOVERNANCE
-* **Purpose:** Reduce decision load; adjust cadence and WIP.
-* **Acceptance checks:** content_validation (review artifact exists)
-* **Evidence:** weekly review note + changes to priorities/cadence
-* **Timebox:** 45–90
-* **Failure paths:** if overwhelmed, run “minimal weekly review” (3 bullets).
-
-### `MonthlySynthesis`
-
-* **Modes:** GOVERNANCE
-* **Purpose:** Extract learnings, archive, and set constraints for next month.
-* **Acceptance checks:** content_validation
-* **Evidence:** synthesis memo + updated project states
-* **Timebox:** 60–120
-* **Failure paths:** if too big, synthesize only the top 3 projects.
-
-### `AssessSeasonForProject` (foreseeable)
-
-* **Modes:** GOVERNANCE
-* **Purpose:** Decide the project’s role this season (active/maintain/archive).
-* **Acceptance checks:** content_validation (decision + rationale)
-* **Evidence:** season decision memo + cadence update
-* **Timebox:** 30–60
-* **Failure paths:** if uncertain, set a 2-week experiment window.
-
-### `LockInSession`
-
-* **Modes:** GOVERNANCE, CONTACT
-* **Purpose:** Convert a session into durable pointers and evidence links.
-* **Acceptance checks:** content_validation (lock-in fields present)
-* **Evidence:** lock-in memo + links
-* **Timebox:** 15–30
-* **Failure paths:** minimal lock-in only (what changed, next pointer).
-
-### `WIPCapEnforce`
-
-* **Modes:** GOVERNANCE
-* **Purpose:** Stop runaway parallelism; force closing or archiving.
-* **Acceptance checks:** content_validation (WIP list updated)
-* **Evidence:** updated active list + archived list
-* **Timebox:** 15–30
-* **Failure paths:** if resistance, freeze new starts for 48h.
-
----
-
-## F) Contact operators
-
-CONTACT subfamilies (lightweight, non-mode): `OPPORTUNITY`, `RECRUITER`, `STAKEHOLDER_CASE`.
-
-### `CRMSprint`
-
-* **Modes:** CONTACT
-* **Purpose:** Batch outreach and follow-ups with low overhead.
-* **Acceptance checks:** content_validation (touch count recorded)
-* **Evidence:** log of touches + scheduled follow-ups
-* **Timebox:** 20–45
-* **Failure paths:** if blocked, do “queue grooming” only.
-
-### `StakeholderUpdateSend` (foreseeable)
-
-* **Modes:** CONTACT, SERVICE
-* **Purpose:** Send a weekly status update to key stakeholders.
-* **Acceptance checks:** content_validation (draft complete, sent recorded)
-* **Evidence:** message text + recipient list + date
-* **Timebox:** 20–45
-* **Failure paths:** if not ready, send a minimal “holding update”.
-
-### `ContactQueueGroom`
-
-* **Modes:** CONTACT
-* **Purpose:** Clean list, pick next targets, define next touches.
-* **Acceptance checks:** content_validation
-* **Evidence:** updated queue + next touch plan
-* **Timebox:** 15–30
-* **Failure paths:** if too big, groom only top 10.
-
-### `TargetBatchTriage`
-
-* **Modes:** CONTACT
-* **Purpose:** Classify a raw opportunity/target list into a prioritized actionable batch.
-* **Acceptance checks:** content_validation (batch has priority, status, next action)
-* **Evidence:** target_list + classified_batch
-* **Timebox:** 20–45
-* **Failure paths:** if inputs are noisy, classify top 10 only and defer long tail.
-
-### `ApplicationPacketPrep`
-
-* **Modes:** CONTACT
-* **Purpose:** Prepare a submission-ready application packet for one target or a bounded batch.
-* **Acceptance checks:** content_validation (required packet sections present)
-* **Evidence:** application packet artifact + checklist + links
-* **Timebox:** 30–75
-* **Failure paths:** if blocked by missing data, produce partial packet + explicit missing fields list.
-
-### `RecruiterReplyDraft`
-
-* **Modes:** CONTACT
-* **Purpose:** Draft a positioned recruiter response aligned with objective, constraints, and next step.
-* **Acceptance checks:** content_validation (objective, constraints, ask, CTA present)
-* **Evidence:** response_draft + trace links to source thread
-* **Timebox:** 15–35
-* **Failure paths:** if context unclear, emit clarifying-questions draft first.
-
-### `StakeholderMeetingPrep`
-
-* **Modes:** CONTACT, GOVERNANCE
-* **Purpose:** Prepare a meeting brief for sensitive/high-stakes stakeholder interactions.
-* **Acceptance checks:** content_validation (objective, status, asks, risks, decision points)
-* **Evidence:** meeting_brief + linked packet artifacts
-* **Timebox:** 20–60
-* **Failure paths:** if prep exceeds scope, reduce to objective/status/asks core brief.
-
-### `FollowUpStrategy`
-
-* **Modes:** CONTACT
-* **Purpose:** Convert sent items or meetings into timed follow-up sequence and ownership.
-* **Acceptance checks:** content_validation (timeline + owner + trigger conditions present)
-* **Evidence:** followup_schedule + queue updates
-* **Timebox:** 15–30
-* **Failure paths:** if uncertainty high, schedule one default follow-up window and review point.
-
-### `BriefBeforeSend`
-
-* **Modes:** CONTACT, GOVERNANCE
-* **Purpose:** Force a short quality/risk brief before sending high-impact stakeholder messages.
-* **Acceptance checks:** content_validation (intent, risk, factual claims, CTA validated)
-* **Evidence:** pre-send brief + sent_log (or deferred decision note)
-* **Timebox:** 10–20
-* **Failure paths:** if confidence low, delay send and request one specific clarifying input.
-
----
-
-## G) Planning and prepared-work operators (explicitly forward-compatible)
-
-These support the future “precomputed queue per mode” idea without assuming the full automation exists.
-
-### `PrepareBlockQueue` (foreseeable)
-
-* **Modes:** GOVERNANCE, TOOLSMITH
-* **Purpose:** Precompute “if you choose mode X, here are top ops” for a block.
-* **Acceptance checks:** content_validation (queue entries valid)
-* **Evidence:** queue artifact (YAML/JSON/MD) with ranked options
-* **Timebox:** 30–60
-* **Failure paths:** if missing data, generate only 1 option per mode.
-
-### `GenerateOperatorCandidates` (foreseeable)
-
-* **Modes:** GOVERNANCE, TOOLSMITH
-* **Purpose:** From frontier and cadence, propose operator runs that flip endpoints.
-* **Acceptance checks:** content_validation
-* **Evidence:** candidate list with expected evidence and timeboxes
-* **Timebox:** 30–60
-* **Failure paths:** fallback to manual selection.
-
-### `PlanCheckinsFromCadence` (foreseeable)
-
-* **Modes:** GOVERNANCE
-* **Purpose:** Generate a loose schedule of upcoming check-ins (non-micromanaging).
-* **Acceptance checks:** content_validation
-* **Evidence:** schedule artifact with due windows and project subsets
-* **Timebox:** 20–45
-* **Failure paths:** plan only the next 7 days.
-
-
-
----
+The YAML file is the canonical documentation registry for motif names. It does **not** supersede `operator_contract_v2`.

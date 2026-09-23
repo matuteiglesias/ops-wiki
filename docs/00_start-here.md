@@ -4,50 +4,69 @@ title: Start Here
 sidebar_position: 10
 ---
 
-## Purpose
-This wiki is a small internal execution manual inside a broader Office-governed operating system. It helps Ops run nominated work with low re-entry friction once governance has compiled and prepared what matters.
+# Start here
 
-## Scope boundary
+## What this manual is
 
-This wiki documents execution doctrine. It does not own live operational state.
+This is the execution and operating-doctrine manual for Matías's governed Office.
 
-- Office owns the operational Front Registry, Carry State, selection, preparation, escalation, and compile outputs.
-- Ops owns execution discipline: blocks, modes, evidence, stop rules, closure, next touch, and re-entry.
-- The GitHub `projects` control plane owns repository identity, lifecycle, topology, readiness, and repository-estate governance. A repository is not the same object as an operational front.
-- Weekly governance documentation may route a human toward state, but does not become a competing state store.
+It does **not** own live operational state. The current system boundary is:
 
-## What this system is
-- A loop that turns Office-nominated fronts and lightweight work units into computable progress with evidence
-- A block based day clock that selects a single mode per block
-- A verification culture: progress counts only when evidence exists
-- The execution layer fed by Office governance, not the only operational loop
+```text
+Control Tower / governed Sheets
+        ↓
+Office coherent generation
+        ↓
+typed work + Staff preparation + Principal surface
+        ↓
+execution packets / human pulls
+        ↓
+evidence + receipts
+        ↓
+reviewed reentry
+```
 
-## What this system is not
-- A place to brainstorm endlessly
-- A place to store every thought
-- A replacement for doing the work
-- The top-level daily governance layer (that role belongs to Office)
-- The canonical Front Registry or Carry State
-- The GitHub repository registry or repository-health authority
+Human-facing sites such as Weekly Ops Governance and Event & Institutional Frontier consume or route to compiled views. They are not parallel databases.
 
-## How to use the wiki in 60 seconds
-1) If Office artifacts exist, start with [Office Charter](office-charter), and accepted compile outputs
-2) Read [Ops under Office](ops-under-office) for execution posture and handoff rules
-3) Run BOOT + [Daily Compiler Lite](daily-plan-compiler-algorithm#daily-compiler-lite-default-610-min) in [Day Clock and Selection](day-clock-selection) on the nominated subset
-4) Execute first focus block, produce evidence, and return closure outputs for Office reingest
+## Authority
 
-Fallback/manual path: if Office artifacts are missing or intentionally bypassed, run direct BOOT + compiler from frontier/cadence inputs. Treat this as temporary execution recovery, not as a transfer of canonical front or carry authority into Ops.
+- **Control Tower v2** owns governed operational state such as front identity, carry posture, capabilities, operator contracts, support artifacts, repository/workspace bindings, and runtime-health projections.
+- **office-auto-lab** owns current Office compilation semantics and coherent-generation artifacts.
+- **The repository-estate control plane** owns repository identity and estate semantics. A repository is not an operational front.
+- **Ops Manual** owns doctrine: bounded execution, evidence, checks, runbooks, closure/reentry conventions, and conceptual tools such as `VACChain` and `Endpoint`.
+- **Weekly Ops Governance** owns human week routing, cadence heuristics, board conventions, and lightweight recurring routines.
+- **Frontier UIs** are read-oriented renderers over published views unless an explicit write contract says otherwise.
+
+## The operating loop
+
+1. Start from the latest valid Office generation or another governed published view.
+2. Read the small current work surface instead of reopening the full universe.
+3. If Principal judgment is required, decide only the bounded question presented.
+4. Execute one bounded move with clear evidence and a stop rule.
+5. Leave a restartable next pointer when work remains.
+6. Return evidence/receipt for reviewed reentry.
+
+## If you only remember five terms
+
+- **Front** — stable operational identity.
+- **VACChain** — conceptual model of how a front creates value.
+- **Endpoint** — a verifiable claim that a value-producing step is done or healthy.
+- **Typed work** — Office v2 facets: `DECIDE`, `UNBLOCK`, `VERIFY`, `EXECUTE`, `MAINTAIN`.
+- **Published view** — disposable read contract compiled from governed state for a renderer or human surface.
+
+## What moved out of this manual
+
+Fine-grained cadence and horizon heuristics belong in Weekly Ops Governance. This manual no longer treats Mon/Wed/Fri carry touches, fixed 14-day constructs, exact daily compile counts, or similar timing patterns as universal system semantics.
+
+They may still be useful weekly-governance defaults.
 
 ## Jump
-- [Office Charter](office-charter)
-- [Ops under Office](ops-under-office)
-- [Run a day](day-clock-selection#run-a-day)
-- [Modes v1](execution-model#modes-v1)
-- [Lightweight work units](data-model#lightweight-work-units)
-- [Frontier](data-model#frontier)
-- [Checks](checks-runbooks#check-types)
 
-## See also
-- [One Pager Spec v1](spec-one-pager)
+- [One Pager Spec](spec-one-pager)
+- [Authority, State & Projection Model](data-model)
 - [Office Charter](office-charter)
+- [Office Compile](office-compile)
 - [Ops under Office](ops-under-office)
+- [Execution Model](execution-model)
+- [Checks and Runbooks](checks-runbooks)
+- [Motif Registries](motif-registries)

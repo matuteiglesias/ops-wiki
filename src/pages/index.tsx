@@ -18,29 +18,29 @@ const pillars: PillarCard[] = [
   {
     id: '01',
     title: 'Operator Console',
-    image: 'Re-entry and boot surface',
-    role: 'The fast landing zone: re-enter, choose BOOT, run a safe low-judgment path, or start the first focus block.',
+    image: 'Fast human entry',
+    role: 'Re-enter from the latest compiled surface, choose one bounded move, leave evidence, and preserve a restart pointer.',
     primary: '/docs/intro',
     secondary: [
       {label: 'Start Here', to: '/docs/start-here'},
-      {label: 'Day Clock', to: '/docs/day-clock-selection'},
+      {label: 'Ops under Office', to: '/docs/ops-under-office'},
     ],
   },
   {
     id: '02',
-    title: 'Core Ontology',
-    image: 'Shared contracts',
-    role: 'Stable definitions for projects, work units, VAC chains, endpoints, frontier, modes, operators, and evidence.',
-    primary: '/docs/spec-one-pager',
+    title: 'Authority & Concepts',
+    image: 'State, views, VACChain, Endpoint',
+    role: 'Separates governed state from conceptual vocabulary and published views without recreating a second data model.',
+    primary: '/docs/data-model',
     secondary: [
-      {label: 'Data Model', to: '/docs/data-model'},
+      {label: 'One Pager Spec', to: '/docs/spec-one-pager'},
     ],
   },
   {
     id: '03',
-    title: 'Office Regulator',
-    image: 'Compile, decide, reingest',
-    role: 'The governance layer that keeps the Principal away from raw chaos and turns state into briefs, queues, and candidates.',
+    title: 'Office',
+    image: 'Coherent generation',
+    role: 'Control Tower snapshot, typed work, Staff preparation, Principal surface, execution packets, and reviewed reentry.',
     primary: '/docs/office-charter',
     secondary: [
       {label: 'Office Compile', to: '/docs/office-compile'},
@@ -48,75 +48,42 @@ const pillars: PillarCard[] = [
   },
   {
     id: '04',
-    title: 'Clock and Selection',
-    image: 'MAINT / FOCUS budget',
-    role: 'The human scheduling interface: one block, one mode, bounded evidence, WIP caps, and re-entry protocol.',
-    primary: '/docs/day-clock-selection',
+    title: 'Execution',
+    image: 'Bounded moves',
+    role: 'Current work kinds, operator-contract boundary, stop rules, evidence patterns, and optional craft language.',
+    primary: '/docs/execution-model',
     secondary: [
-      {label: 'Daily Compiler', to: '/docs/daily-plan-compiler-algorithm'},
-      {label: 'Assistant Compile', to: '/docs/assistant-guided-daily-compile'},
+      {label: 'Checks and Runbooks', to: '/docs/checks-runbooks'},
     ],
   },
   {
     id: '05',
-    title: 'Execution Machinery',
-    image: 'Modes and operators',
-    role: 'The runtime contract: modes, operators, runs, debug packets, stop rules, and evidence patterns.',
-    primary: '/docs/execution-model',
+    title: 'Motif Memory',
+    image: 'Reusable names, lightweight prose',
+    role: 'Keeps the main operator and work motifs visible while exhaustive reusable vocabularies live in machine-readable registries.',
+    primary: '/docs/motif-registries',
     secondary: [
-      {label: 'Operator Registry', to: '/docs/operator-registry'},
+      {label: 'Operator Motifs', to: '/docs/operator-registry'},
     ],
   },
   {
     id: '06',
-    title: 'Verification Layer',
-    image: 'Checks and runbooks',
-    role: 'Truth enforcement: smoke checks, health checks, runbooks, evidence manifests, and drift handling.',
-    primary: '/docs/checks-runbooks',
+    title: 'Weekly Timing',
+    image: 'Cadence lives elsewhere',
+    role: 'Blocks remain bounded here; detailed horizons, Mon/Wed/Fri carry, 14-day frames, and weekly cadence belong to Weekly Ops Governance.',
+    primary: '/docs/day-clock-selection',
     secondary: [
-      {label: 'Ops under Office', to: '/docs/ops-under-office'},
-      {label: 'Data Model', to: '/docs/data-model'},
-    ],
-  },
-  {
-    id: '07',
-    title: 'Thin Staff Interface',
-    image: 'Prepare, route, post',
-    role: 'Staff Preparation Surface. This routes to the existing office and assistant compile pages instead of inventing new docs.',
-    primary: '/docs/assistant-guided-daily-compile',
-    secondary: [
-      {label: 'Office Compile', to: '/docs/office-compile'},
-      {label: 'Ops under Office', to: '/docs/ops-under-office'},
+      {label: 'Assistant-Guided Compile', to: '/docs/assistant-guided-daily-compile'},
     ],
   },
 ];
 
 const reactionSteps = [
-  {
-    label: 'Sense',
-    text: 'Start from current state, not the full universe.',
-    to: '/docs/office-compile',
-  },
-  {
-    label: 'Select',
-    text: 'Compile a small candidate set for today.',
-    to: '/docs/day-clock-selection',
-  },
-  {
-    label: 'Prepare',
-    text: 'Use assistant/staff help only to lower startup friction.',
-    to: '/docs/assistant-guided-daily-compile',
-  },
-  {
-    label: 'Execute',
-    text: 'Run one block in one mode and leave evidence.',
-    to: '/docs/execution-model',
-  },
-  {
-    label: 'Reingest',
-    text: 'Return closure, next touch, and carry update.',
-    to: '/docs/ops-under-office',
-  },
+  {label: 'Govern', text: 'Keep mutable truth in the governed source.', to: '/docs/data-model'},
+  {label: 'Compile', text: 'Produce one coherent current generation.', to: '/docs/office-compile'},
+  {label: 'Prepare', text: 'Reduce ambiguity below the Principal.', to: '/docs/office-charter'},
+  {label: 'Execute', text: 'Run one bounded move under current authority.', to: '/docs/execution-model'},
+  {label: 'Reenter', text: 'Return evidence and reviewed state proposals.', to: '/docs/ops-under-office'},
 ];
 
 function Hero(): ReactNode {
@@ -125,18 +92,15 @@ function Hero(): ReactNode {
       <div className="container">
         <p className={styles.kicker}>Ops Home</p>
         <Heading as="h1" className={styles.heroTitle}>
-          Seven navigation surfaces for a bounded operating system.
+          Govern state once. Compile small surfaces. Execute boundedly.
         </Heading>
         <p className={styles.heroSubtitle}>
-          A public-facing operator console that points to the actual manual pages: ontology, office compile, day clock, execution, checks, and assistant-guided staff preparation.
+          A public manual for Control Tower / Office boundaries, VACChain and Endpoint reasoning,
+          bounded execution, evidence, and reusable work motifs.
         </p>
         <div className={styles.heroActions}>
-          <Link className="button button--primary button--lg" to="/docs/intro">
-            Enter the console
-          </Link>
-          <Link className="button button--secondary button--lg" to="/docs/office-charter">
-            Read the office charter
-          </Link>
+          <Link className="button button--primary button--lg" to="/docs/intro">Enter the console</Link>
+          <Link className="button button--secondary button--lg" to="/docs/data-model">Read the architecture</Link>
         </div>
       </div>
     </header>
@@ -155,9 +119,7 @@ function PillarCardView({card}: {card: PillarCard}): ReactNode {
         <p>{card.role}</p>
       </Link>
       <div className={styles.cardLinks}>
-        {card.secondary.map((item) => (
-          <Link key={item.to} to={item.to}>{item.label}</Link>
-        ))}
+        {card.secondary.map((item) => <Link key={item.to} to={item.to}>{item.label}</Link>)}
       </div>
     </article>
   );
@@ -168,16 +130,11 @@ function Pillars(): ReactNode {
     <section className={styles.section}>
       <div className="container">
         <div className={styles.sectionHeader}>
-          <p className={styles.kicker}>Actual docs, schematic navigation</p>
-          <Heading as="h2">The seven cards route to files that exist today.</Heading>
-          <p>
-            No private dev journal, sheet, repo, or context registry link is exposed here. The cards are public navigation affordances over the current manual.
-          </p>
+          <p className={styles.kicker}>Small doctrine, explicit authority</p>
+          <Heading as="h2">Six surfaces are enough to navigate the current system.</Heading>
         </div>
         <div className={styles.cardGrid}>
-          {pillars.map((card) => (
-            <PillarCardView card={card} key={card.id} />
-          ))}
+          {pillars.map((card) => <PillarCardView card={card} key={card.id} />)}
         </div>
       </div>
     </section>
@@ -189,11 +146,8 @@ function ReactionCycle(): ReactNode {
     <section className={clsx(styles.section, styles.reactionSection)}>
       <div className="container">
         <div className={styles.sectionHeader}>
-          <p className={styles.kicker}>Small reaction cycle</p>
-          <Heading as="h2">Compile, act, and return state.</Heading>
-          <p>
-            This is the public version of the office/cell analogy: sense current state, select a small path, prepare just enough, execute one bounded block, and reingest residue.
-          </p>
+          <p className={styles.kicker}>Operating cycle</p>
+          <Heading as="h2">Authority stays upstream; evidence comes back.</Heading>
         </div>
         <div className={styles.reactionGrid}>
           {reactionSteps.map((step, index) => (
@@ -215,16 +169,17 @@ function BoundaryPanel(): ReactNode {
       <div className="container">
         <div className={styles.boundaryPanel}>
           <div>
-            <p className={styles.kicker}>Public safety boundary</p>
-            <Heading as="h2">This page routes to manuals, not private sources.</Heading>
+            <p className={styles.kicker}>Boundary</p>
+            <Heading as="h2">This manual explains meaning; it does not become live state.</Heading>
             <p>
-              The manual can describe the operating architecture publicly while private links remain injected only when an agent or local workflow needs them.
+              Control Tower and Office own current semantics. Weekly Governance owns timing heuristics.
+              Frontier and other UIs render published views.
             </p>
           </div>
           <div className={styles.boundaryLinks}>
             <Link to="/docs/start-here">Start Here</Link>
             <Link to="/docs/office-compile">Office Compile</Link>
-            <Link to="/docs/checks-runbooks">Checks and Runbooks</Link>
+            <Link to="/docs/motif-registries">Motif Registries</Link>
           </div>
         </div>
       </div>
@@ -234,9 +189,7 @@ function BoundaryPanel(): ReactNode {
 
 export default function Home(): ReactNode {
   return (
-    <Layout
-      title="Ops Home"
-      description="Public navigation layer for the ops manual, office compile, day clock, execution model, and verification contracts.">
+    <Layout title="Ops Home" description="Doctrine for governed state, Office compilation, bounded execution, VACChain/Endpoint reasoning, evidence, and re-entry.">
       <Hero />
       <main>
         <Pillars />

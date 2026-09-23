@@ -1,250 +1,160 @@
 ---
-title: Office Charter v0
+title: Office Charter
 sidebar_position: 32
 slug: /office-charter
 ---
 
-# Office Charter v0
+# Office Charter
 
 ## Purpose
 
-**Oficina** is the governance layer that sits between the **Principal** and the execution system.
+Office is the governed preparation and compilation layer between live operational state, scarce Principal judgment, and bounded execution.
 
-Its job is not to do all work itself.
-Its job is to reduce disorder, prepare work before it reaches execution, and make sure the Principal does not need to manually reconstruct the full universe every day.
+Its job is to make the work estate usable without turning the Principal into the scheduler, database administrator, or universal triage engine.
 
-Oficina exists so that:
+## Authority boundary
 
-- active fronts are carried over time
-- support work is prepared before it is needed
-- simple decisions are resolved below the Principal when possible
-- non-trivial decisions are escalated cleanly
-- Ops executes from a compiled subset, not from the raw universe
+- Control Tower v2 owns governed operational state.
+- Office consumes one validated Control Tower snapshot per coherent generation.
+- Repository/workspace identity is resolved through governed bindings; local paths are observations, not semantic identity.
+- Staff prepares evidence-backed substrate.
+- Principal supplies judgment only where required.
+- Execution acts through bounded packets and current operator contracts.
+- Reentry proposes reviewed changes; executors do not silently mutate governance.
+- UI consumers are projections and should not force Office to reproduce obsolete formats.
 
-## Vocabulary boundary
+## Current Office loop
 
-An **operational front** is not the same object as a GitHub repository.
+```text
+Control Tower v2
+  ↓ one validated snapshot
+identity resolution
+  ↓
+typed work
+  ↓
+Staff preparation
+  ↓
+Principal surface
+  ↓
+execution plan / packets
+  ↓
+receipts
+  ↓
+reviewable reentry
+```
 
-- Office governs the operational Front Registry and Carry State.
-- The GitHub `projects` control plane governs repository identity, lifecycle, topology, readiness, and repository-estate coordination.
-- A front may reference zero, one, or many repositories; a repository may support zero, one, or many fronts.
-- Repository state may inform Office, but it does not automatically determine front carry posture.
+A coherent generation publishes only after the whole generation validates.
 
-Legacy references in older Ops material to “Projects / Carry State” should be read as **Front Registry / Carry State** unless the text is explicitly discussing GitHub repositories.
+The last-known-good pointer must not advance on a failed generation.
 
-## What Oficina is
+## What Office governs
 
-Oficina is:
+### 1. Intake consistency
 
-- the authority that governs **staff**
-- the authority that governs interaction between:
-  - Front Registry / Carry State
-  - Context
-  - Capture
-  - KB Contracts
-  - Ops
-- the layer that compiles operational material for the day and week
-- the layer that maintains continuity across fronts
+Office captures the current Control Tower state once and validates structural identity before downstream work.
 
-Oficina is the glue and coordination container for the rest of the work system.
+### 2. Work compilation
 
-## What Oficina governs
+Office converts governed state into the small typed vocabulary:
 
-Oficina governs:
+- `DECIDE`
+- `UNBLOCK`
+- `VERIFY`
+- `EXECUTE`
+- `MAINTAIN`
 
-### 1. Front Registry and Carry State
-It maintains the operational front universe and the current posture of those fronts.
+Free prose may provide context, but it does not secretly control routing.
 
-Examples of carry posture:
+### 3. Staff preparation
 
-- Active
-- Watch
-- Support-needed
-- Escalate
-- Parked
+Staff triages typed work cheaply and deep-prepares only a bounded pull window.
 
-### 2. Agenda compilation
-It compiles support material and candidate work for the day and week.
+Preparation may gather evidence, resolve repository/workspace observations, expose uncertainties, and recommend a move. It does not authorize execution.
 
-Examples:
+### 4. Principal compression
 
-- principal brief
-- today compile
-- support queue
-- escalations
-- block candidates
+The Principal Compiler produces a small attention surface such as:
 
-### 3. Staff work
-It governs staff behavior and the spawn of support artifacts.
+- Needs You;
+- ready pulls;
+- exceptions;
+- moved without you;
+- delta.
 
-Examples:
+A successful generation may legitimately require no Principal action.
 
-- unlocker briefs
-- decision briefs
-- health checks
-- next-unlock packets
-- context briefs
-- follow-up prompts
-- re-entry material
+### 5. Execution compilation
 
-### 4. Inter-layer coordination
-It determines how the other work surfaces interact.
+Ready work may become bounded execution packets under governed operator contracts.
 
-Examples:
+Compilation is not authorization for actions outside those contracts.
 
-- Context informs Office
-- Front Registry / Carry State provides the work universe and posture
-- Capture feeds new artifacts into Office
-- KB Contracts constrains seams and architecture
-- optional repository context may be supplied by the GitHub estate control plane
-- Ops executes work objects nominated by Office
+### 6. Reentry
 
-## What Oficina does not do
+Execution facts return as receipts or human closure. Reentry validates those facts and produces proposals such as `DONE`, `FOLLOW_UP`, or `WAITING`.
 
-Oficina does **not** replace the Principal.
+Governed state changes only through the reviewed authority path.
 
-Oficina does **not** replace Ops.
+## What Office does not own
 
-Oficina does **not** become a giant knowledge base.
+Office does not own:
 
-Oficina does **not** execute arbitrary deep work by itself.
+- the raw truth of every external system;
+- repository-estate identity;
+- arbitrary browser-local UI state;
+- every weekly cadence heuristic;
+- every VACChain or Endpoint as a stored row;
+- every relationship/contact record;
+- execution permission merely because work is ready.
 
-Oficina does **not** own the underlying truth of every system.
-It governs flows between systems and prepares action.
+## Principal
 
-More specifically:
+The Principal remains the highest judgment authority.
 
-- it does not become the raw source registry
-- it does not become the GitHub repository registry
-- it does not become the capture system
-- it does not become the execution manual
-- it does not become the technical contract layer
+The system should minimize Principal load by preparing bounded questions and defaults rather than surfacing raw ambiguity.
 
-## Relationship with Principal
+## Staff
 
-The Principal remains the highest authority.
+Staff is preparation, not a second backlog.
 
-The Principal:
+A useful Staff result is a packet that lets the next decision or execution begin with less reconstruction.
 
-- decides exceptions
-- resolves non-trivial choices
-- approves or corrects compiled plans
-- provides direction and judgment where needed
+## Ops / execution
 
-Oficina should reduce the number of things that need to reach the Principal.
+Ops is responsible for disciplined execution and evidence.
 
-### Desired rule
+Useful enduring rules:
 
-The Principal should receive:
+- bounded move;
+- explicit expected evidence;
+- current operator contract;
+- stop before scope silently expands;
+- leave a restartable pointer if unfinished;
+- return what actually happened, not what was intended.
 
-- only the matters that truly need judgment
-- prepared options when possible
-- compact and current briefings
-- already-compiled candidate work, not raw chaos
+## VACChain and Endpoint
 
-## Relationship with Ops
+Office does not require every front to materialize VACChains or Endpoints in Control Tower.
 
-Ops is the execution layer under Office governance.
+They remain valuable conceptual tools when deciding:
 
-Ops should not begin from the raw universe by default.
+- where value is actually produced;
+- what “done” means;
+- where verification belongs;
+- which missing dependency blocks useful progress.
 
-Ops should receive:
+See [Authority, State & Projection Model](data-model).
 
-- nominated work objects or candidate sets from Office
-- expected evidence
-- relevant support artifacts
-- escalation posture if applicable
+## Weekly governance
 
-Ops then:
+Weekly policy owns cadence and horizon heuristics. Office may consume governed fields that encode operating posture, but this manual does not hard-code Mon/Wed/Fri routines, 14-day frames, or exact daily item counts into the Office architecture.
 
-- runs BOOT on the compiled subset
-- uses day clock and modes to execute well
-- produces evidence
-- returns updates to Office
+## Renderers
 
-## Relationship with the other assets
+Office outputs structured artifacts. Markdown, websites, boards, and Frontier UIs are projections over those artifacts or over other published views.
 
-### Front Registry / Carry State
-Provides the operational front universe and current posture fields. This is work-estate state, not GitHub repository-estate state.
+A renderer should not reconstruct Office semantics independently.
 
-### GitHub estate control plane
-Provides optional repository identity, topology, lifecycle, readiness, and observed repository context. It does not own Office front identity or carry posture.
+## Operating principle
 
-### Context
-Provides access to sources and durable surfaces.
-
-### Capture
-Transforms live cognition and events into artifacts that Office can classify and use.
-
-### KB Contracts
-Provides technical and structural constraints so Office does not coordinate drifted or invalid seams.
-
-# Office Loop Playbook
-
-## Purpose
-
-Operate the office through a short loop that compiles, decides, executes, and reingests without adding more automation first.
-
-The goal of this stage is not elegance. It is to expose real system weaknesses through live use.
-
-## Sequence
-
-1. Office compiles
-2. Principal decides
-3. Ops executes
-4. Office reingests
-
----
-
-## Daily minimum protocol
-
-1. Read `office_summary.md`
-2. Read `principal_brief_today.md`
-3. Decide 2 to 4 things maximum
-4. Pick 1 principal block and 1 staff-preparable block
-5. Execute through this playbook
-6. Close with a short reingest note:
-   - what changed
-   - what did not change
-   - what brief was missing
-
----
-
-## Friction log
-
-Track only short tags:
-
-- `missing_bundle_field`
-- `bad_priority`
-- `brief_too_vague`
-- `should_have_been_escalation`
-- `should_not_have_reached_principal`
-- `needs_new_artifact_type`
-
----
-
-## Minimal outputs of Oficina
-
-At minimum, Oficina must be able to produce:
-
-- principal brief
-- today compile
-- support queue
-- escalation queue
-- block candidates
-- carry state updates
-- follow-up spawns
-
-## Office operating principle
-
-**Oficina governs selection, preparation, escalation, and coordination.  
-Ops governs execution and evidence.  
-The Principal governs judgment and direction.**
-Do not add more automation until repeated live use shows where the real bottlenecks are.
-
-## Version note
-
-This is **v0**.
-
-The goal is not institutional perfection.
-The goal is a compact, usable governance layer that can already support daily and weekly operation without forcing the Principal to rebuild the world manually each time.
+**Govern state once. Prepare below the Principal. Execute through bounded contracts. Reenter through evidence.**
