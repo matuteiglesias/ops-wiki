@@ -1,0 +1,109 @@
+schema_version: 1
+registry_id: ops.work-motifs
+authority: documentation-motif-registry
+runtime_authority: office-auto-lab typed work compiler
+note: >
+  Canonical runtime kinds are marked canonical_runtime. Other entries are
+  descriptive motifs for humans and agents and do not create new control states.
+
+work_motifs:
+  - id: DECIDE
+    class: canonical_runtime
+    summary: Principal judgment or an explicit decision is required.
+  - id: UNBLOCK
+    class: canonical_runtime
+    summary: Missing context, identity, preparation, or prerequisite prevents safe progress.
+  - id: VERIFY
+    class: canonical_runtime
+    summary: Bounded evidence gathering, diagnosis, or validation is required.
+  - id: EXECUTE
+    class: canonical_runtime
+    summary: Work is sufficiently prepared for bounded action.
+  - id: MAINTAIN
+    class: canonical_runtime
+    summary: Bounded upkeep is explicitly expressed.
+
+  - id: research
+    class: descriptive
+    summary: Gather evidence to reduce uncertainty.
+  - id: analyze
+    class: descriptive
+    summary: Transform existing evidence into an interpretation.
+  - id: synthesize
+    class: descriptive
+    summary: Compress multiple findings into a smaller durable representation.
+  - id: design
+    class: descriptive
+    summary: Define a target structure, interface, or decision before implementation.
+  - id: implement
+    class: descriptive
+    summary: Change code, data, or configuration toward an accepted design.
+  - id: diagnose
+    class: descriptive
+    summary: Isolate the source of a failure or discrepancy.
+  - id: repair
+    class: descriptive
+    summary: Restore a previously intended behavior.
+  - id: refactor
+    class: descriptive
+    summary: Improve internal structure without changing intended external behavior.
+  - id: validate
+    class: descriptive
+    summary: Check an artifact against explicit acceptance criteria.
+  - id: reconcile
+    class: descriptive
+    summary: Resolve divergent representations into one governed interpretation.
+  - id: migrate
+    class: descriptive
+    summary: Move consumers from an old contract or representation to a new one.
+  - id: document
+    class: descriptive
+    summary: Create durable explanatory or operational memory.
+  - id: capture
+    class: descriptive
+    summary: Preserve raw input for later governed processing.
+  - id: triage
+    class: descriptive
+    summary: Classify a bounded set and decide what deserves deeper treatment.
+  - id: prepare
+    class: descriptive
+    summary: Reduce startup friction without performing the principal execution.
+  - id: review
+    class: descriptive
+    summary: Inspect a current artifact or state for correctness, risk, or decision.
+  - id: decide
+    class: descriptive
+    summary: Resolve a bounded choice and record the consequence.
+  - id: coordinate
+    class: descriptive
+    summary: Align multiple actors or surfaces around one next state.
+  - id: outreach
+    class: descriptive
+    summary: Initiate a relationship or opportunity touch.
+  - id: follow_up
+    class: descriptive
+    summary: Continue a prior interaction under an explicit trigger.
+  - id: meeting_prep
+    class: descriptive
+    summary: Prepare objective, context, asks, and risks for an interaction.
+  - id: publish
+    class: descriptive
+    summary: Move an artifact onto an external surface.
+  - id: send
+    class: descriptive
+    summary: Deliver a bounded communication to its recipient.
+  - id: deploy
+    class: descriptive
+    summary: Promote a runnable artifact into an operating environment.
+  - id: observe
+    class: descriptive
+    summary: Gather runtime or external signals without mutating the observed system.
+  - id: monitor
+    class: descriptive
+    summary: Repeatedly observe a signal under a stable contract.
+  - id: archive
+    class: descriptive
+    summary: Remove an item from active attention while preserving recoverable context.
+  - id: close
+    class: descriptive
+    summary: Record what changed, evidence, and restart conditions after bounded work.
