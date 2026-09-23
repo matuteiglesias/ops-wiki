@@ -4,7 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Ops Manual',
-  tagline: 'Operator console for office compile, day clock, evidence, and re-entry.',
+  tagline: 'Doctrine for governed state, Office compilation, bounded execution, evidence, and re-entry.',
   favicon: 'img/favicon.ico',
 
   future: {
@@ -60,7 +60,8 @@ const config: Config = {
         },
         {to: '/docs/intro', label: 'Console', position: 'left'},
         {to: '/docs/office-charter', label: 'Office', position: 'left'},
-        {to: '/docs/day-clock-selection', label: 'Clock', position: 'left'},
+        {to: '/docs/data-model', label: 'Architecture', position: 'left'},
+        {to: '/docs/motif-registries', label: 'Motifs', position: 'left'},
       ],
     },
     footer: {
@@ -75,20 +76,19 @@ const config: Config = {
           ],
         },
         {
-          title: 'Office Layer',
+          title: 'Architecture',
           items: [
+            {label: 'Authority, State & Projection', to: '/docs/data-model'},
             {label: 'Office Charter', to: '/docs/office-charter'},
             {label: 'Office Compile', to: '/docs/office-compile'},
-            {label: 'Ops under Office', to: '/docs/ops-under-office'},
           ],
         },
         {
           title: 'Execution',
           items: [
-            {label: 'Day Clock and Selection', to: '/docs/day-clock-selection'},
-            {label: 'Daily Plan Compiler', to: '/docs/daily-plan-compiler-algorithm'},
             {label: 'Execution Model', to: '/docs/execution-model'},
             {label: 'Checks and Runbooks', to: '/docs/checks-runbooks'},
+            {label: 'Motif Registries', to: '/docs/motif-registries'},
           ],
         },
       ],
