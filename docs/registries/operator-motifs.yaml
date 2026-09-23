@@ -1,0 +1,145 @@
+schema_version: 1
+registry_id: ops.operator-motifs
+authority: documentation-motif-registry
+runtime_authority: Control Tower operator_contract_v2
+note: >
+  These names preserve reusable execution patterns. They do not grant runtime
+  powers or replace current operator contracts.
+
+operators:
+  - id: RunSmoke
+    family: verification
+    summary: Prove a bounded path with fixtures or offline inputs.
+    evidence: [log, validation_result, artifacts]
+  - id: RunLiveBounded
+    family: verification
+    summary: Validate a live path under explicit scope and safety bounds.
+    evidence: [run_log, health_signal]
+  - id: ContentValidationGate
+    family: verification
+    summary: Enforce schema, count, non-empty, and content invariants.
+    evidence: [validation_report]
+  - id: FreshnessCheck
+    family: verification
+    summary: Check whether evidence or artifacts are current enough for use.
+    evidence: [freshness_result]
+  - id: MinimalReproExtraction
+    family: debugging
+    summary: Turn unclear behavior into a reproducible bounded case.
+    evidence: [repro, logs]
+  - id: DebugPacketCreate
+    family: debugging
+    summary: Package an unresolved failure so debugging can stop cleanly.
+    evidence: [debug_packet]
+  - id: ResolveDebugPacket
+    family: debugging
+    summary: Close a known packet with a verified fix or narrowed next experiment.
+    evidence: [fix_evidence, packet_update]
+  - id: RegressionGuardrailAdd
+    family: debugging
+    summary: Encode a test or assertion that prevents a known failure from returning.
+    evidence: [test_or_gate]
+  - id: RepoInitUpgrade
+    family: engineering
+    summary: Bring a repository to the minimum supported operational shape.
+    evidence: [commit, structure_manifest]
+  - id: PrereqsBootstrap
+    family: engineering
+    summary: Create the smallest missing prerequisites needed for a bounded next step.
+    evidence: [created_artifacts]
+  - id: DefineCapabilitiesAndTests
+    family: engineering
+    summary: Express capabilities and the checks that make them inspectable.
+    evidence: [capability_spec, tests]
+  - id: ADRLite
+    family: governance
+    summary: Record a decision cheaply enough to prevent repeated relitigation.
+    evidence: [decision_note]
+  - id: RunbookHumanDraft
+    family: knowledge
+    summary: Create the minimum human memory needed to operate a repeated path.
+    evidence: [runbook]
+  - id: RunbookMachineSpec
+    family: knowledge
+    summary: Record exact commands, inputs, outputs, and validation for reproducible execution.
+    evidence: [machine_runbook]
+  - id: EvidenceManifestWrite
+    family: evidence
+    summary: Bind existing outputs into a compact structured evidence manifest.
+    evidence: [manifest]
+  - id: CaptureIntake
+    family: capture
+    summary: Preserve raw human input without forcing premature structure.
+    evidence: [capture_note]
+  - id: SessionCondense
+    family: capture
+    summary: Compress captured material into decisions, unknowns, and usable context.
+    evidence: [condensed_note]
+  - id: NextPointerFromCapture
+    family: capture
+    summary: Derive one restartable next move from condensed material.
+    evidence: [next_pointer]
+  - id: MeetingPacketDraft
+    family: relationship
+    summary: Prepare objective, context, asks, risks, and follow-up substrate for a meeting.
+    evidence: [meeting_packet]
+  - id: CRMSprint
+    family: relationship
+    summary: Move a bounded batch of relationship touches with low overhead.
+    evidence: [touch_log]
+  - id: ContactQueueGroom
+    family: relationship
+    summary: Clean and classify a relationship queue into usable next touches.
+    evidence: [queue_update]
+  - id: TargetBatchTriage
+    family: opportunity
+    summary: Classify a raw target set into a bounded actionable batch.
+    evidence: [classified_batch]
+  - id: ApplicationPacketPrep
+    family: opportunity
+    summary: Prepare a submission-ready packet for one target or small batch.
+    evidence: [application_packet]
+  - id: RecruiterReplyDraft
+    family: relationship
+    summary: Produce a positioned recruiter response with a clear next step.
+    evidence: [response_draft]
+  - id: StakeholderMeetingPrep
+    family: relationship
+    summary: Prepare a bounded high-stakes stakeholder brief.
+    evidence: [meeting_brief]
+  - id: StakeholderUpdateSend
+    family: relationship
+    summary: Send a concise current-state update to a stakeholder.
+    evidence: [sent_message]
+  - id: FollowUpStrategy
+    family: relationship
+    summary: Convert an interaction into explicit follow-up triggers and ownership.
+    evidence: [followup_plan]
+  - id: BriefBeforeSend
+    family: relationship
+    summary: Check intent, factual claims, risk, and CTA before a consequential send.
+    evidence: [pre_send_brief]
+  - id: WeeklyReview
+    family: governance
+    summary: Reconcile active state and human attention at a weekly boundary.
+    evidence: [review_note]
+  - id: MonthlySynthesis
+    family: governance
+    summary: Compress repeated observations into a small set of durable changes.
+    evidence: [synthesis]
+  - id: WIPCapEnforce
+    family: governance
+    summary: Reduce parallel active work when concurrency has become costly.
+    evidence: [state_change_or_decision]
+  - id: AssessSeasonForFront
+    family: governance
+    summary: Decide the current seasonal role of a front without changing its identity.
+    evidence: [season_decision]
+  - id: PrepareBlockQueue
+    family: planning
+    summary: Prepare a bounded menu of executable pulls from current compiled state.
+    evidence: [candidate_set]
+  - id: GenerateOperatorCandidates
+    family: planning
+    summary: Suggest reusable operator motifs appropriate to a current work item.
+    evidence: [candidate_list]
