@@ -31,7 +31,7 @@ Office v2 has five canonical work facets:
 
 The full registry also preserves descriptive motifs such as research, synthesize, outreach, publish, repair, reconcile, and triage.
 
-See [`registries/work-motifs.yaml`](./registries/work-motifs.yaml).
+Repository registry: `docs/registries/work-motifs.yaml`.
 
 ## Primary operator motifs
 
@@ -52,7 +52,7 @@ Common operator motifs worth remembering:
 
 These names are reusable patterns, not permission grants. Before execution, the current `operator_contract_v2` and execution packet determine what is actually allowed.
 
-See [`registries/operator-motifs.yaml`](./registries/operator-motifs.yaml).
+Repository registry: `docs/registries/operator-motifs.yaml`.
 
 ## Adding a motif
 
