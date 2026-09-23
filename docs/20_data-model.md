@@ -1,304 +1,228 @@
 ---
 id: data-model
-title: Data Model
+title: Authority, State & Projection Model
 sidebar_position: 30
 ---
 
-## Module header
-Purpose: define the truth objects and invariants for projects, lightweight work units, endpoints, frontier, cadence, and evidence.
+# Authority, State & Projection Model
 
-Exports:
-- Project
-- WorkUnit (Case | Batch | Sprint | Encounter)
-- VACChain
-- Endpoint
-- FrontierState
-- EvidenceLink
-- CadenceRule
+## Why this page changed
 
-Imports:
-- Modes and operator runs from [Execution Model](execution-model)
-- Check types from [Checks and Runbooks](checks-runbooks)
-- Selection policy from [Day Clock and Selection](day-clock-selection)
+Older versions of this manual described a complete Ops-owned object model: Project, WorkUnit, VACChain, Endpoint, FrontierState, EvidenceLink, and CadenceRule.
 
-## Jump
-- [Project](#project)
-- [Lightweight work units](#lightweight-work-units)
-- [VACChain](#vac-chain)
-- [Endpoint](#endpoint)
-- [Frontier](#frontier)
-- [Frontier semantics](#frontier-semantics)
-- [EvidenceLink](#evidencelink)
-- [CadenceRule](#cadencerule)
+That was useful while the live control plane was still forming. It is no longer the correct authority model.
 
----
+Today, live operational state is governed elsewhere. This page now distinguishes:
 
-## Project
+1. **canonical governed state**;
+2. **durable conceptual vocabulary**;
+3. **compiled/runtime artifacts**;
+4. **published views**.
 
-A unit of ownership and continuity. Projects are the primary index for the portfolio. All execution and truth ultimately attaches to a project.
+## Canonical governed state
 
-### Fields
-- `project_id` (stable, unique)
-- `title` (display name, can change without breaking links)
-- `home` (portfolio category)
-- `repo_paths[]` (0 or more; local paths or URLs)
-- `default_mode` (one of the modes v1, optional but recommended)
-- `cadence` (reference to a `CadenceRule` or inline frequency)
-- `state` (idea | active | paused | messy-active | archived)
-- `tags[]` (free labels, including optional tag `MODEL/ANALYZE`)
-- `owner_type` (human-owned | machine-owned | mixed)
-- `next_checkin_due` (date)
-- `vac_chains[]` (0 or more)
-- `endpoints[]` (derived via VAC chains, but may be stored for convenience)
+The current Control Tower v2 estate includes, among other tables:
 
-### Invariants
-- Every **active** project must map to at least one VAC chain.
-- Every **active** project must map to at least one endpoint.
-- Projects may have zero repos (pure governance/contact projects), but must still have endpoints if active.
+- `front_registry_v2` — stable front identity and relatively stable semantics;
+- `carry_state_v2` — current governed operating posture;
+- `Capabilities_v2` — capability projection;
+- `operator_contract_v2` — operator powers, prohibitions, seams, and buses;
+- `front_aliases_v2` — identity reconciliation;
+- `support_artifacts_v2` — governed pointers and support surfaces;
+- `REPO MONITOR_v2` — front-to-repository/workspace bindings;
+- `repo_workspaces_v2` — observed concrete workspaces;
+- `runtime_health_v2` — derived runtime-health projection.
 
-### Notes
-- “Home” is where it belongs. “Mode” is how you work. Do not merge them.
-- A project can be human-owned with machine-run checks, or machine-owned with human runbooks.
+Relationship governance additionally uses tables such as `relationships_v1` and `relationship_agenda_v1`.
 
----
+This manual does not duplicate their schemas. The current table/code contract is authoritative.
 
-## Lightweight work units
+## Identity boundary
 
-Lightweight work units are valid first-class planning/execution objects for short-lived or situational work.  
-They are intentionally lighter than Project and **do not require VAC chains or endpoints**.
+### Front
 
-Types:
-- `Case`: one bounded situation to resolve (usually one outcome, one thread).
-- `Batch`: repeated similar actions handled together (N items, same flow).
-- `Sprint`: short focused effort window for repair/prep/cleanup/build-up.
-- `Encounter`: a concrete interaction event (meeting/call/visit/conversation) with follow-up.
+`front_id` is the stable operational identity.
 
-### Fields (minimum contract)
-- `unit_type` (`case` | `batch` | `sprint` | `encounter`)
-- `unit_id` (stable, unique)
-- `title`
-- `objective` (one clear done statement)
-- `horizon` (same-day | 2-7-days | 1-4-weeks)
-- `owner_type` (human-owned | machine-owned | mixed)
-- `state` (idea | active | blocked | done | archived)
-- `artifacts_expected[]` (notes, packets, logs, docs, outputs)
-- `next_pointer` (one-line next action)
-- `project_id` (optional; link if this unit belongs to an existing project)
+A front is not a repository.
 
-### Invariants
-- Work units may exist independently of any project.
-- Work units may attach to a project (`project_id`) when continuity already exists.
-- If a work unit persists across repeated cycles or gains operational surface area, promote to project.
-- Promotion is explicit: create project, then map prior unit artifacts as seed context.
+A front may reference zero, one, or many repositories; a repository may support zero, one, or many fronts. Repository/workspace identity remains governed by its own control plane.
 
-### Promotion rule (v0)
-Promote `Case/Batch/Sprint/Encounter` to `Project` when at least 2 of these are true:
-- the unit survives beyond its original horizon,
-- it needs recurring cadence/check-ins,
-- it now requires stable runbooks/operators across sessions,
-- it accumulates multiple dependent subthreads.
+### Relation and agenda identities
 
-### Use Project vs Work Unit (decision rule)
-Use **Project** when continuity, verification, and maintenance are expected.  
-Use **Case/Batch/Sprint/Encounter** when scope is short, situational, or throughput-oriented.
+Relationship-oriented surfaces may use `relation_id` and `agenda_id`. A renderer may display them together with a front, event, institution, or opportunity without collapsing their identities.
 
-### Examples
-1) **Family meeting packet** (`encounter`)
-   - objective: leave meeting with decisions + open asks + next owner
-   - artifacts_expected: packet draft, decision note, follow-up list
+## Conceptual vocabulary
 
-2) **Batch of 10 job applications** (`batch`)
-   - objective: submit 10 applications with tailored snippets
-   - artifacts_expected: application tracker row updates, sent links, next follow-up pointer
+### VACChain {#vac-chain}
 
-3) **Room repair/prep block** (`sprint`)
-   - objective: restore room to usable state in one 2-hour sprint
-   - artifacts_expected: checklist, before/after photos, missing-materials note
+A **VACChain** models how a front produces value.
 
----
+A VACChain answers:
 
-## VACChain {#vac-chain}
+- What valuable result exists at the end?
+- What transformations or interactions create it?
+- Where are the meaningful verification points?
+- Which dependencies can block the chain?
 
-A Value-Add Chain describes value in the world and its production path. It ties a project to one or more endpoints that can be verified.
+A lightweight conceptual shape is:
 
-### Fields
-- `vac_id` (stable, unique)
-- `project_id`
-- `description` (one paragraph max in v0)
-- `endpoints[]` (list of `endpoint_id`)
-- `prerequisites[]` (optional, referenced assets or conditions)
-- `owner_type` (human-owned | machine-owned | mixed)
+```text
+vac_id?
+front_id
+description
+stages[]
+endpoints[]
+dependencies[]
+```
 
-### Invariants
-- VAC chains must reference at least one endpoint.
-- VAC chains define *what value exists*; they do not define how to execute (execution belongs to operators and runbooks).
+The `vac_id` is optional unless a real registry needs to persist the chain.
 
-### Example
-- “Accounting ingest -> canonical ledger -> reports” is a VAC chain.
-- “Deploy ops wiki -> build green -> domain mapped” is a VAC chain.
+#### Invariant
 
----
+A VACChain describes value production. It does **not** own execution permissions, carry posture, repository identity, or scheduling.
 
-## Endpoint
+### Endpoint {#endpoint}
 
-An endpoint is a computable “done” claim. Endpoints are the smallest units that frontier can evaluate.
+An **Endpoint** is a verifiable claim at a meaningful point of a VACChain.
 
-### Fields
-- `endpoint_id` (stable, unique)
-- `vac_id`
-- `type` (suggested enum below)
-- `check_method` (the check or command that evaluates it)
-- `artifacts_expected[]` (paths or patterns)
-- `freshness_policy` (how recent evidence must be to count)
-- `severity` (low | medium | high | critical)
-- `runbook_refs[]` (optional pointers to human/machine runbooks)
+A lightweight conceptual shape is:
 
-### Suggested endpoint types (v0)
-Keep this short; use tags if needed:
-- `ingest`
-- `materialize`
-- `report`
-- `service_health`
-- `deploy`
-- `contract_boundary`
-- `content_quality`
+```text
+endpoint_id?
+vac_ref
+claim
+check_method
+evidence_expected
+freshness_or_validity_rule?
+```
 
-### Invariants
-- Endpoint must be testable via a check method.
-- Endpoint must name required evidence artifacts (even if patterns).
-- Endpoint evaluation must be bounded (timebox or fixture) unless explicitly “live bounded”.
+Examples:
 
-### Relationship to checks
-- Endpoints do not “run themselves”. Operators run checks; checks emit evidence; frontier reads results.
+- “canonical dataset exists and passes schema validation”;
+- “scheduled job completed and emitted a run record”;
+- “stakeholder update was sent and follow-up state was recorded”;
+- “published report resolves to the accepted artifact”.
 
----
+Endpoints may be technical, operational, narrative, or stakeholder-facing.
 
-## Frontier
+#### Endpoint state
 
-Frontier is the daily map of truth derived from endpoint evaluation. It is the primary selection input for work.
+Do not require one global PASS/WARN/FAIL status machine.
 
-### Fields
-- `project_id`
-- `endpoint_statuses` (map from `endpoint_id` -> PASS/WARN/FAIL)
-- `derived_status` (PASS/WARN/FAIL; project-level aggregation)
-- `timestamp`
-- `evidence_links[]` (list of `EvidenceLink`)
-- `notes` (optional short string)
+The relevant producer may expose richer state: test results, runtime health, publication state, relationship state, or another domain-specific status. The Endpoint concept only requires that the claim be checkable.
 
-### Derived status rule (v0)
-- If any endpoint is FAIL -> project derived status is FAIL.
-- Else if any endpoint is WARN -> project derived status is WARN.
-- Else -> PASS.
+## Compiled/runtime artifacts
 
----
+Office v2 produces generation-bound artifacts such as:
 
-## Frontier semantics
+- control snapshots;
+- typed work items;
+- Staff preparation packets;
+- Principal briefs;
+- execution plans and packets;
+- run records;
+- reentry proposals.
 
-This is the contract that makes truth stable across time.
+These are canonical for the generation that produced them, but they do not replace the underlying governed Control Tower state.
 
-### PASS
-PASS means:
-- The check succeeds.
-- Required evidence artifacts exist.
-- Content validation gates (when applicable) pass.
+### Typed work
 
-PASS is not “it ran”. PASS is “it ran and produced meaningful outputs”.
+The current canonical work facets are:
 
-### WARN
-WARN means:
-- The check may succeed, but execution is not safe or complete due to:
-  - missing runbook
-  - missing prerequisite scaffolding
-  - weak or partial evidence (artifact exists but incomplete)
-  - freshness is stale (evidence too old for the endpoint’s policy)
-  - link hygiene warnings in doc systems (acceptable only if explicitly allowed)
+`DECIDE`, `UNBLOCK`, `VERIFY`, `EXECUTE`, `MAINTAIN`.
 
-WARN is a portfolio smell. Most WARNs should be cheap to reduce during maintenance blocks.
+See [Motif Registries](motif-registries) for descriptive work motifs beyond the runtime enum.
 
-### FAIL
-FAIL means:
-- The check fails, or
-- Critical evidence is missing, or
-- The runbook misleads execution (runbook drift), or
-- The endpoint is not testable (no runnable check method for an active endpoint)
+## Published views
 
-FAIL triggers bounded debugging behavior. Drift converts to a debug packet.
+A **published view** is a reproducible read contract compiled for a particular human or renderer surface.
 
----
+Examples:
 
-## EvidenceLink
+- Principal attention view;
+- weekly governance view;
+- relationship frontier view;
+- institutional/event frontier view;
+- maintenance view;
+- runtime-health view.
 
-Evidence is what makes progress real. Evidence links connect checks and artifacts to projects and frontier states.
+A minimal generic view item may contain:
 
-### Fields
-- `artifact_path` (file path or directory)
-- `manifest_path` (optional, strongly recommended)
-- `log_path` (optional)
-- `commit_hash` (optional, recommended for repos)
-- `sheet_row` (optional pointer to a tracking row)
-- `evidence_type` (`technical` | `operational` | `narrative` | `stakeholder`)
-- `context_type` (optional: `project` | `case` | `batch` | `sprint` | `encounter`)
-- `structured_fields` (optional map; required for narrative/stakeholder evidence)
-- `source_ref` (optional link to transcript, thread, email, or meeting source)
-- `created_at` (timestamp)
+```text
+view_id
+item_id
+item_kind
+title
+group
+sort_hint
+summary
+next_pointer
+source_refs[]
+source_updated_at
+view_generated_at
+```
 
-### Invariants
-- Evidence must be linkable from a check-in note or from the frontier.
-- For pipelines, evidence should include counts and hashes via manifests when feasible.
-- Narrative and stakeholder evidence must be structured enough to validate (not free text dumps).
-- If endpoint-level technical checks are required, narrative evidence is supplementary and cannot substitute required technical evidence.
+Not every view needs every field.
 
-### Narrative/stakeholder minimum validity (v0)
-For `evidence_type` in (`narrative`, `stakeholder`), `structured_fields` should include:
-- `objective` (what this artifact was trying to achieve)
-- `decision_or_status` (decision made, current status, or explicit unknown)
-- `next_pointer` (one executable next action)
-- `trace_links[]` (references to sources, related artifacts, or prior notes)
+### View invariants
 
-### Evidence type examples
-- `technical`: build log, smoke output, manifest, test report
-- `operational`: weekly review note, WIP cap decision, planning queue snapshot
-- `narrative`: capture memo, decision brief, closure memo
-- `stakeholder`: meeting packet, recruiter reply draft, application packet
+1. A view is not authoritative for source facts.
+2. A view may contain compiled judgments or grouping.
+3. A renderer may filter/sort locally without writing operational state.
+4. A view can be discarded and rebuilt.
+5. A failed refresh should not replace a valid last-known-good publication with an accidental empty result.
 
-### Recommended manifest contents (v0)
-- artifact list with sizes
-- row counts for key tables
-- dataset or input hash
-- run timestamp
-- version info (git hash, tool version) if available
+## Evidence references
 
----
+Evidence should be traceable to the claim it supports, but this manual no longer requires one universal `EvidenceLink` storage schema.
 
-## CadenceRule
+A useful evidence pointer usually identifies:
 
-Cadence defines when a project is due for check-in and how overdue states behave.
+- producer/source;
+- artifact or record identity;
+- observation/run time;
+- optional digest/revision;
+- short claim supported.
 
-### Fields
-- `frequency_days` (integer, eg 1, 3, 7, 10, 30)
-- `overdue_behavior` (how to triage when late)
-- `reentry_protocol` (minimal actions to resume after gaps)
-- `grace_days` (optional)
-- `preferred_block_type` (optional, eg MAINT vs FOCUS)
-- `default_mode` (optional override, else project default)
+## Cadence and horizons
 
-### Invariants
-- Cadence must support low-friction re-entry.
-- Overdue behavior must not require reading backlogs to resume.
+Cadence and horizon constructs are **weekly-governance policy**, not universal data-model requirements.
 
-### Suggested overdue behavior (v0)
-- If overdue less than 2x frequency: do a normal check-in.
-- If overdue more than 2x frequency: do a catch-up check-in:
-  - update frontier snapshot
-  - run one cheap operator
-  - produce one next pointer
+Weekly governance may use:
 
----
+- same-day / this-week / later;
+- Mon/Wed/Fri review heuristics;
+- 14-day frames;
+- quarterly reframes;
+- daypart/block defaults.
 
-## Used by
-- [Selection policy](day-clock-selection#selection-policy)
-- [Operator instances](execution-model#oprun)
-- [Checks and evidence](checks-runbooks#evidence-and-manifests)
+Those are valuable human operating conventions. They belong in Weekly Ops Governance so they can evolve without forcing schema changes across Office, Control Tower, or Frontier renderers.
+
+## Frontier terminology
+
+The old Ops `FrontierState`—a PASS/WARN/FAIL aggregation over endpoints—is historical and is no longer a live canonical object.
+
+Use:
+
+- **runtime health** for runtime observation;
+- **typed work / compiled views** for work surfacing;
+- **Event & Institutional Frontier** for the current read-oriented external-world attention renderer.
+
+## Deprecated schema concepts
+
+The following are no longer canonical storage objects merely because older pages named them:
+
+- Project as the universal operational root;
+- WorkUnit / Case / Batch / Sprint / Encounter as mandatory schema types;
+- FrontierState;
+- EvidenceLink;
+- CadenceRule.
+
+Their underlying ideas may still appear as ordinary language or motifs.
 
 ## See also
+
 - [One Pager Spec](spec-one-pager)
+- [Office Compile](office-compile)
+- [Execution Model](execution-model)
+- [Motif Registries](motif-registries)
